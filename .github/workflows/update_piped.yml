@@ -16,8 +16,9 @@ jobs:
       - run: pip install requests
       - name: Execute Script
         run: |
-          cd piped-video-enhancer
-          python update_script.py
-          git add index.js
-          git diff-index --quiet HEAD || git commit -m "Update Domains"
-          git push
+          python ${{ github.workspace }}/piped-video-enhancer/update_script.py
+          cd ${{ github.workspace }}
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git push origin main
