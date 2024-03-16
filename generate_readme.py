@@ -23,7 +23,7 @@ def generate_root_readme(root_directory, username):
                 if os.path.exists(index_file):
                     metadata = extract_metadata(index_file)
                     script_name = metadata.get('name', entry)  # Use directory name as fallback
-                    script_url = f'https://github.com/{username}/browser-scripts/{entry}'
+                    script_url = f'https://github.com/{username}/browser-scripts/tree/main/{entry}'
                     script_list.append((script_name, script_url))
 
         with open(os.path.join(root_directory, 'README.md'), 'w', encoding='utf-8') as readme:
