@@ -23,5 +23,5 @@ jobs:
 
       - name: Generate READMEs
         run: |
-          python generate_readmes.py
+          python generate_readme.py
         working-directory: .
