@@ -1,0 +1,27 @@
+name: Update READMEs
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 2 * * 1-5"
+  workflow_dispatch:
+
+jobs:
+  update_readmes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Generate READMEs
+        run: |
+          python generate_readmes.py
+        working-directory: .
