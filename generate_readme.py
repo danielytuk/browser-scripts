@@ -38,7 +38,7 @@ def generate_script_readme(script_directory, username):
             return
 
         metadata = extract_metadata(index_file)
-        script_name = metadata.get('name', 'Script Name')
+        script_name = metadata.get('name', os.path.basename(script_directory))
         description = metadata.get('description', 'Description of the script...')
         script_url = f'https://github.com/{username}/browser-scripts/raw/main/{script_directory}/index.js'
 
@@ -62,6 +62,8 @@ def main():
         for entry in os.listdir(root_directory):
             entry_path = os.path.join(root_directory, entry)
             if os.path.isdir(entry_path):
+                if entry == '.github':
+                    continue
                 generate_script_readme(entry_path, username)
         generate_root_readme(root_directory, username)
     except Exception as e:
