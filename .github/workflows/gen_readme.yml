@@ -1,9 +1,6 @@
 name: Update READMEs
 
 on:
-  push:
-    branches:
-      - main
   schedule:
     - cron: "0 2 * * 1-5"
   workflow_dispatch:
@@ -22,6 +19,4 @@ jobs:
           python-version: '3.x'
 
       - name: Generate READMEs
-        run: |
-          python generate_readme.py
-        working-directory: .
+        run: python generate_readme.py
