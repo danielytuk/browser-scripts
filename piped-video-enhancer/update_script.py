@@ -1,10 +1,14 @@
+import os
 import requests
 import re
+
+script_dir = os.path.dirname(os.path.realpath(__file__))
+index_js_path = os.path.join(script_dir, "index.js")
 
 response = requests.get("https://piped-instances.kavin.rocks/")
 domains = {instance["api_url"] for instance in response.json()}
 
-with open("index.js", "r") as file:
+with open(index_js_path, "r") as file:
     script_content = file.read()
 
 updated_match_line = re.sub(
@@ -13,5 +17,5 @@ updated_match_line = re.sub(
     script_content,
 )
 
-with open("index.js", "w") as file:
+with open(index_js_path, "w") as file:
     file.write(updated_match_line)
