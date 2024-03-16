@@ -20,11 +20,11 @@ jobs:
 
     - name: Run Python script to generate README files
       run: |
-        cd browser-scripts
-        python generate_readme.py
+        python ${{ github.workspace }}/generate_readme.py
 
     - name: Commit changes
       run: |
+        cd ${{ github.workspace }}
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add .
@@ -32,4 +32,5 @@ jobs:
 
     - name: Push changes
       run: |
+        cd ${{ github.workspace }}
         git push origin main
