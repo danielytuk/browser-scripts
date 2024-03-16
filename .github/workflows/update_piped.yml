@@ -17,8 +17,11 @@ jobs:
       - name: Execute Script
         run: |
           python ${{ github.workspace }}/piped-video-enhancer/update_script.py
+      - name: Commit and push changes
+        run: |
           cd ${{ github.workspace }}
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
+          git commit -m "Update piped-video-enhancer domains"
           git push origin main
