@@ -1,18 +1,19 @@
-# ChatGPT helped fix this (hopefully)
-
+import os
 import requests
 import re
+
+# ChatGPT helped fix this (hopefully)
 
 # Fetch the domains from the API
 response = requests.get("https://piped-instances.kavin.rocks/")
 domains = {instance["api_url"] for instance in response.json()}
 
-# Define the URL of the index.js file in your GitHub repository
-index_js_url = "https://raw.githubusercontent.com/danielytuk/browser-scripts/main/piped-video-enhancer/index.js"
+# Define the path to the index.js file
+script_path = os.path.join(os.getcwd(), "piped-video-enhancer", "index.js")
 
-# Fetch the content of the index.js file
-response = requests.get(index_js_url)
-script_content = response.text
+# Read the content of the index.js file
+with open(script_path, "r") as file:
+    script_content = file.read()
 
 # Perform the necessary modifications to the script content
 updated_match_line = re.sub(
@@ -22,5 +23,5 @@ updated_match_line = re.sub(
 )
 
 # Update the index.js file with the modified content
-with open("index.js", "w") as file:
+with open(script_path, "w") as file:
     file.write(updated_match_line)
