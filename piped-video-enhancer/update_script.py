@@ -8,10 +8,9 @@ with open("index.js", "r") as file:
     script_content = file.read()
 
 updated_match_line = re.sub(
-    r"(\/\/ @match\s+.+)",
-    lambda match: f"{match.group(1)} *://{', *://'.join(domains)}/watch?v=*",
+    r"(\/\/ @match\s+.+\n)",
+    lambda match: f"{match.group(0)} {' *://'.join(domains)}/watch?v=*\n",
     script_content,
-    count=1,
 )
 
 with open("index.js", "w") as file:
