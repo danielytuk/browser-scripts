@@ -18,9 +18,13 @@ def generate_root_readme(root_directory, username):
     try:
         for entry in os.listdir(root_directory):
             entry_path = os.path.join(root_directory, entry)
-            if os.path.isdir(entry_path):
-                script_url = f'https://github.com/{username}/browser-scripts/{entry}'
-                script_list.append((entry, script_url))
+            if os.path.isdir(entry_path) and entry != '.github':
+                index_file = os.path.join(entry_path, 'index.js')
+                if os.path.exists(index_file):
+                    metadata = extract_metadata(index_file)
+                    script_name = metadata.get('name', entry)  # Use directory name as fallback
+                    script_url = f'https://github.com/{username}/browser-scripts/{entry}'
+                    script_list.append((script_name, script_url))
 
         with open(os.path.join(root_directory, 'README.md'), 'w', encoding='utf-8') as readme:
             readme.write('# Browser Scripts\n\n')
@@ -47,7 +51,7 @@ def generate_script_readme(script_directory, username):
             readme.write(f'{description}\n\n')
             readme.write('## Install\n\n')
             readme.write('To use this script, you need to install one of the following browser extensions:\n\n')
-            readme.write('- [Greasemonkey](https://www.greasespot.net/) **(firefox only)*\n')
+            readme.write('- [Greasemonkey](https://www.greasespot.net/) **(Firefox only)*\n')
             readme.write('- [Tampermonkey](https://www.tampermonkey.net/)\n')
             readme.write('- [Violentmonkey](https://violentmonkey.github.io/)\n\n')
             readme.write(f'After installing the extension, you can install the script by clicking the following link:\n\n')
@@ -57,13 +61,11 @@ def generate_script_readme(script_directory, username):
 
 def main():
     try:
-        root_directory = '.'
-        username = 'danielytuk'
+        root_directory = '.'  # Change this to the root directory of your scripts
+        username = 'danielytuk'  # Your GitHub username
         for entry in os.listdir(root_directory):
             entry_path = os.path.join(root_directory, entry)
-            if os.path.isdir(entry_path):
-                if entry == '.github':
-                    continue
+            if os.path.isdir(entry_path) and entry != '.github':
                 generate_script_readme(entry_path, username)
         generate_root_readme(root_directory, username)
     except Exception as e:
