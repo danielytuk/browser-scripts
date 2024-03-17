@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         Piped Video Enhancer
-// @description  Enhances the Piped video player interface by hiding the navbar, extending the video display area, and setting video resolution to 1080p automatically
 // @author       danielytuk
-// @version      1.14
-// @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
-// @run-at       document-idle
 // @grant        none
-// @require      https://cdn.jsdelivr.net/npm/@violentmonkey/dom@2
-// @match        https://piped.ngn.tf/watch?v=*
-// ==/UserScript==
+// @version      1.15
+// @run-at       document-idle
+// @match        https://piped.privacydev.net/watch?v=*
+// @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
+// @description  Enhances the Piped video player interface by hiding the navbar, extending the video display area, and setting video resolution to 1080p automatically
+// @name         Piped Video Enhancer
+// @match        https://piped-instances.kavin.rocks/watch?v=*
 
 (() => {
     'use strict';
