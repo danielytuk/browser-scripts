@@ -47,9 +47,17 @@ def fetch_domains(api_urls, max_retries=3):
 
 def follow_and_get_watch_urls(domains):
     watch_urls = []
+    user_agents = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",
+    ]
     for domain in domains:
         try:
-            request = Request(domain, headers={"User-Agent": random.choice(user_agents)})
+            user_agent = random.choice(user_agents)
+            request = Request(domain, headers={"User-Agent": user_agent})
             with urlopen(request) as response:
                 final_url = f"{response.url}/watch?v=*" if not response.url.endswith('/watch?v=*') else response.url
                 watch_urls.append(final_url)
