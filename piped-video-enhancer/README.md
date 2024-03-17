@@ -1,6 +1,6 @@
 # Piped Video Enhancer
 
-Enhances the Piped video player interface by hiding the navbar and extending the video display area
+Enhances the Piped video player interface by hiding the navbar, extending the video display area, and setting video resolution to 1080p automatically
 
 ## Install
 

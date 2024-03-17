@@ -1,6 +1,6 @@
 # Ideal Search Settings for Searx
 
-Automatically sets ideal search parameters for enhanced search experience
+Automatically sets ideal search parameters for enhanced search experience. Make sure you change "HTTP Method" to GET in Preferences.
 
 ## Install
 
