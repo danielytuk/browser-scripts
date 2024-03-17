@@ -19,14 +19,20 @@ def fetch_domains(api_url, fallback_url):
 
 def update_script_match_lines(script_path, new_match_lines):
     try:
+        existing_match_lines = set()
         with open(script_path, "r") as file:
             script_content = file.readlines()
+            for line in script_content:
+                if line.startswith("// @match"):
+                    existing_match_lines.add(line.strip())
 
         with open(script_path, "w") as file:
             for line in script_content:
                 if not any(match_line in line for match_line in new_match_lines):
                     file.write(line)
-            file.writelines(new_match_lines)
+            for match_line in new_match_lines:
+                if match_line.strip() not in existing_match_lines:
+                    file.write(match_line)
     except Exception as e:
         print(f"An error occurred while updating match lines: {e}")
 
