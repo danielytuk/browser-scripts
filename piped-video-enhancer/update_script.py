@@ -44,7 +44,8 @@ def follow_and_get_watch_urls(domains):
                 final_url = f"{response.url}/watch?v=*" if not response.url.endswith('/watch?v=*') else response.url
                 watch_urls.append(final_url)
         except (URLError, HTTPError) as e:
-            raise RuntimeError(f"Failed to fetch watch URLs for {domain}: {e}")
+            print(f"Failed to fetch watch URLs for {domain}: {e}")
+            continue  # Continue to the next domain
     return watch_urls
 
 def update_script_match_lines(script_path, new_domains):
