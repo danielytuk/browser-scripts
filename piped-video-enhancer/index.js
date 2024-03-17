@@ -19,15 +19,40 @@
 // @match        https://piped.ducks.party/watch?v=*
 // ==/UserScript==
 
+/*
+    Code ran through ChatGPT 4 to optimise using proper practices.
+    If you can improve the code further, so it's more optimised.
+    Feel free to open a pull request.
+*/
+
 (() => {
     'use strict';
     let handleScroll = null;
-    const applyCinemaMode = (navbar, videoPlayer) => {
-        const toggleNavbar = () => navbar.style.display = window.scrollY ? 'block' : 'none';
+    const debounce = (func, delay) => {
+        let timeout;
+        return function() {
+            const context = this;
+            const args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), delay);
+        };
+    };
+
+    // Cached references to DOM elements
+    const navbar = document.querySelector('nav');
+    const videoPlayer = document.querySelector('.player-container');
+
+    // Function to apply cinema mode
+    const toggleNavbar = () => {
+        navbar.style.display = window.scrollY ? 'block' : 'none';
+    };
+
+    const applyCinemaMode = () => {
         Object.assign(videoPlayer.style, { width: '100%', height: 'calc(100vh - 50px)', maxHeight: '131vh' });
         toggleNavbar();
         handleScroll = toggleNavbar;
     };
+
     const select1080pResolution = () => {
         const resolutionsMenu = document.querySelector("#app > div > div.w-full > div:nth-child(1) > div:nth-child(1) > div > div.shaka-controls-container > div.shaka-no-propagation.shaka-show-controls-on-mouse-over.shaka-settings-menu.shaka-resolutions");
         const resolutionButtons = document.querySelectorAll('.explicit-resolution');
@@ -39,22 +64,29 @@
                 }
             }
         }
+    };
+
     const checkForElements = () => {
-        const navbar = document.querySelector('nav'), videoPlayer = document.querySelector('.player-container');
         if (navbar && videoPlayer) {
-            applyCinemaMode(navbar, videoPlayer);
+            applyCinemaMode();
             select1080pResolution();
-    const observer = new MutationObserver(checkForElements);
+        }
+    };
+
+    const observer = new MutationObserver(debounce(checkForElements, 100)); // Throttle checkForElements
     observer.observe(document.body, { childList: true, subtree: true });
+
     const scrollHandler = () => handleScroll && handleScroll();
-    window.addEventListener('scroll', scrollHandler);
+    window.addEventListener('scroll', debounce(scrollHandler, 100)); // Debounce scroll event
+
     window.addEventListener('beforeunload', (event) => {
         if (handleScroll) {
             handleScroll = null;
             window.removeEventListener('scroll', scrollHandler);
             observer.disconnect();
             event.preventDefault();
+        }
     });
+
     window.addEventListener('DOMContentLoaded', checkForElements);
 })();
-checkForElements);
