@@ -13,7 +13,6 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: '3.x'
-      - run: pip install requests
       - name: Execute Script
         run: |
           python ${{ github.workspace }}/piped-video-enhancer/update_script.py
