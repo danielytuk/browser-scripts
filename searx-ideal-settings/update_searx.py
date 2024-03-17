@@ -7,7 +7,8 @@ def fetch_clearnet_domains():
         response = requests.get("https://github.com/libredirect/instances/raw/main/data.json")
         response.raise_for_status()
         data = response.json()
-        return [instance["searxng.clearnet"] for instance in data]
+        clearnet_instances = data.get("searxng", {}).get("clearnet", [])
+        return clearnet_instances
     except requests.RequestException as e:
         print(f"Failed to fetch data from GitHub: {e}")
         return []
