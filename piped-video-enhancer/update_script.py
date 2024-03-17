@@ -2,7 +2,6 @@ import os
 import urllib.request
 from urllib.parse import urlparse
 from urllib.error import URLError, HTTPError
-import json
 
 MANUAL_DOMAINS = [
     "https://piped.privacydev.net/",
@@ -14,12 +13,14 @@ def fetch_domains(api_urls):
     for url in api_urls:
         try:
             with urllib.request.urlopen(url) as response:
-                data = json.loads(response.read().decode("utf-8"))
-                domains.extend(instance["api_url"] for instance in data)
-        except (URLError, HTTPError) as e:
-            raise RuntimeError(f"Failed to fetch data from {url}: {e}")
-        except json.JSONDecodeError as e:
-            raise RuntimeError(f"Failed to decode JSON data from {url}: {e}")
+                data = response.read().decode("utf-8")
+                domains.extend(instance["api_url"] for instance in data.json())
+                # If the primary URL is successfully accessed, exit the loop
+                break
+        except URLError as e:
+            print(f"Failed to fetch data from {url}: {e}")
+            if url == api_urls[-1]:  # If it's the last URL (fallback), raise an error
+                raise RuntimeError("All URLs are unreachable")
     domains.extend(MANUAL_DOMAINS)
     return domains
 
@@ -33,6 +34,12 @@ def follow_and_get_watch_urls(domains):
         except (URLError, HTTPError) as e:
             raise RuntimeError(f"Failed to follow redirect for {domain}: {e}")
     return watch_urls
+
+def extract_base_domain(url):
+    base_domain = f"{urlparse(url).scheme}://{urlparse(url).netloc}"
+    if base_domain.startswith(("https://", "http://")):
+        return base_domain.rstrip("/")
+    raise ValueError("Invalid URL format. Must start with 'http://' or 'https://'")
 
 def update_script_match_lines(script_path, new_domains):
     essential_lines = {
@@ -55,7 +62,7 @@ def update_script_match_lines(script_path, new_domains):
                 user_script_ended = True
                 watch_urls = follow_and_get_watch_urls(new_domains)
                 updated_lines.extend([f"// @match        {watch_url}\n" for watch_url in watch_urls])
-            elif user_script_started and not user_script_ended and line.strip().startswith(tuple(essential_lines)):
+            elif user_script_started and not user_script_ended and any(line.startswith(essential) for essential in essential_lines):
                 updated_lines.append(line)
         
         file.seek(0)
@@ -68,9 +75,9 @@ def remove_duplicate_lines(script_path):
         file.seek(0)
         file.truncate()
         for line in lines:
-            if line.lower() not in unique_lines:
+            if line not in unique_lines:
                 file.write(line)
-                unique_lines.add(line.lower())
+                unique_lines.add(line)
 
 def increment_version(script_path):
     try:
