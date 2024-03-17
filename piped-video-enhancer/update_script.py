@@ -3,25 +3,32 @@ import urllib.request
 from urllib.parse import urlparse
 from urllib.error import URLError, HTTPError
 import json
+import time
 
 MANUAL_DOMAINS = [
     "https://piped.privacydev.net/",
     # Add more manual domains here if needed
 ]
 
-def fetch_domains(api_urls):
+def fetch_domains(api_urls, max_retries=3):
     domains = []
     for url in api_urls:
-        try:
-            with urllib.request.urlopen(url) as response:
-                data = json.loads(response.read().decode("utf-8"))
-                domains.extend(instance["api_url"] for instance in data)
-                # If the primary URL is successfully accessed, exit the loop
-                break
-        except (URLError, HTTPError) as e:
-            print(f"Failed to fetch data from {url}: {e}")
-            if url == api_urls[-1]:  # If it's the last URL (fallback), raise an error
-                raise RuntimeError("All URLs are unreachable")
+        retries = 0
+        while retries < max_retries:
+            try:
+                with urllib.request.urlopen(url) as response:
+                    data = json.loads(response.read().decode("utf-8"))
+                    domains.extend(entry["api_url"] for entry in data)
+                    break
+            except (URLError, HTTPError) as e:
+                print(f"Failed to fetch data from {url}: {e}")
+                retries += 1
+                if retries == max_retries:
+                    print(f"Reached max retries for {url}.")
+                    break
+                time.sleep(1)
+        else:
+            raise RuntimeError(f"All retries failed for {url}")
     domains.extend(MANUAL_DOMAINS)
     return domains
 
@@ -36,12 +43,6 @@ def follow_and_get_watch_urls(domains):
             raise RuntimeError(f"Failed to follow redirect for {domain}: {e}")
     return watch_urls
 
-def extract_base_domain(url):
-    base_domain = f"{urlparse(url).scheme}://{urlparse(url).netloc}"
-    if base_domain.startswith(("https://", "http://")):
-        return base_domain.rstrip("/")
-    raise ValueError("Invalid URL format. Must start with 'http://' or 'https://'")
-
 def update_script_match_lines(script_path, new_domains):
     essential_lines = [
         "// @name",
@@ -54,7 +55,7 @@ def update_script_match_lines(script_path, new_domains):
     ]
     updated_lines = []
     user_script_started = user_script_ended = False
-    watch_urls = follow_and_get_watch_urls(new_domains)  # Move this line here
+    watch_urls = follow_and_get_watch_urls(new_domains)
     with open(script_path, "r+") as file:
         lines = file.readlines()
         for line in lines:
@@ -63,12 +64,10 @@ def update_script_match_lines(script_path, new_domains):
             elif line.startswith("// ==/UserScript=="):
                 user_script_ended = True
                 updated_lines.extend([f"// @match        {watch_url}\n" for watch_url in watch_urls])
-                updated_lines.append(line)  # Add the closing UserScript line
+                updated_lines.append(line)
             elif user_script_started and not user_script_ended:
-                # Add back essential lines
                 if any(line.startswith(essential) for essential in essential_lines):
                     updated_lines.append(line)
-                # Add the updated match lines before the original UserScript closing line
                 if line.startswith("// @icon"):
                     updated_lines.extend([f"// @match        {watch_url}\n" for watch_url in watch_urls])
         
@@ -103,8 +102,8 @@ def increment_version(script_path):
 
 def main():
     primary_url = "https://worker-snowy-cake-fcf5.cueisdi.workers.dev/"
-    fallback_url = "https://piped-instances.kavin.rocks/"
-    api_urls = [primary_url, fallback_url]
+    secondary_url = "https://piped-instances.kavin.rocks/"
+    api_urls = [primary_url, secondary_url]
     try:
         script_path = os.path.join(os.getenv("GITHUB_WORKSPACE"), "piped-video-enhancer", "index.js")
         update_script_match_lines(script_path, fetch_domains(api_urls))
