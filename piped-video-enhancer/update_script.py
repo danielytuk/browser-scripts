@@ -3,14 +3,15 @@ import requests
 import re
 
 def fetch_domains(api_urls):
+    final_domains = []
     for url in api_urls:
         try:
-            response = requests.get(url)
+            response = requests.get(url, allow_redirects=True)
             response.raise_for_status()
-            return [instance["api_url"] for instance in response.json()]
+            final_domains.append(response.url.rstrip('/'))
         except requests.RequestException as e:
             print(f"Failed to fetch data from {url}: {e}")
-    return []
+    return final_domains
 
 def update_script_match_lines(script_path, new_domains):
     try:
@@ -36,7 +37,7 @@ def update_script_match_lines(script_path, new_domains):
             for line in source_file:
                 line_stripped = line.strip()
                 if line_stripped.startswith("// ==/UserScript=="):
-                    updated_lines.extend([f"// @match        {domain.rstrip('/')}/watch?v=*\n" for domain in new_domains])
+                    updated_lines.extend([f"// @match        {domain}/watch?v=*\n" for domain in new_domains])
                     updated_lines.append(line)
                     found_user_script_end = True
                     break
