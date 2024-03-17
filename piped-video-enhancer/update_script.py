@@ -3,11 +3,10 @@ import json
 import time
 import random
 import string
-from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 MANUAL_DOMAINS = [
-    "https://piped.privacydev.net/",
+    "https://piped.privacydev.net",
     # Add more manual domains here if needed
 ]
 
@@ -20,10 +19,10 @@ def fetch_domains(api_urls, max_retries=3):
                 headers = {"User-Agent": "Mozilla/5.0"}
                 req = Request(url, headers=headers)
                 with urlopen(req) as response:
-                    data = json.loads(response.read().decode("utf-8"))
+                    data = json.load(response)
                     domains.extend(entry["api_url"] for entry in data)
                     break
-            except (URLError, HTTPError) as e:
+            except Exception as e:
                 print(f"Failed to fetch data from {url}: {e}")
                 retries += 1
                 if retries == max_retries:
@@ -39,11 +38,12 @@ def fetch_domains(api_urls, max_retries=3):
 def follow_and_get_watch_urls(domains):
     watch_urls = []
     for domain in domains:
+        domain = domain.rstrip('/')  # Remove trailing slashes
         try:
             with urlopen(domain) as response:
-                final_url = f"{response.url}/watch?v=*" if not response.url.endswith('/watch?v=*') else response.url
+                final_url = f"{response.geturl().rstrip('/')}/watch?v=*" if not response.geturl().endswith('/watch?v=*') else response.geturl()
                 watch_urls.append(final_url)
-        except (URLError, HTTPError) as e:
+        except Exception as e:
             print(f"Failed to fetch watch URLs for {domain}: {e}")
             continue  # Continue to the next domain
     return watch_urls
@@ -105,19 +105,10 @@ def increment_version(script_path):
     except Exception as e:
         raise RuntimeError(f"An error occurred while updating version: {e}")
 
-def generate_random_string(length):
-    letters_and_digits = string.ascii_letters + string.digits
-    return ''.join(random.choice(letters_and_digits) for i in range(length))
-
 def pretend_to_be_real_person():
-    first_names = ["John", "Emma", "Michael", "Sophia", "David", "Olivia", "James", "Ava"]
-    last_names = ["Smith", "Johnson", "Williams", "Jones", "Brown", "Davis", "Miller", "Wilson"]
-    email_providers = ["gmail.com", "yahoo.com", "outlook.com", "hotmail.com"]
-    first_name = random.choice(first_names)
-    last_name = random.choice(last_names)
-    email_provider = random.choice(email_providers)
-    email = f"{first_name.lower()}.{last_name.lower()}@{email_provider}"
-    password = generate_random_string(10)
+    first_name, last_name = random.choice(["John", "Emma", "Michael", "Sophia", "David", "Olivia", "James", "Ava"]), random.choice(["Smith", "Johnson", "Williams", "Jones", "Brown", "Davis", "Miller", "Wilson"])
+    email = f"{first_name.lower()}.{last_name.lower()}@{random.choice(['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'])}"
+    password = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
     return first_name, last_name, email, password
 
 def main():
@@ -131,7 +122,7 @@ def main():
         increment_version(script_path)
         remove_duplicate_lines(script_path)
         first_name, last_name, email, password = pretend_to_be_real_person()
-        print(f"Hello, I'm {first_name} {last_name}. My email is {email} and my password is {password}.")
+        print(f"Generated user: {first_name} {last_name}, email: {email}, password: {password}")
     except RuntimeError as e:
         print(e)
 
