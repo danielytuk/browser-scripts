@@ -2,12 +2,19 @@
 // @name         Piped Video Enhancer
 // @description  Enhances the Piped video player interface by hiding the navbar and extending the video display area
 // @author       danielytuk
-// @version      1.8
+// @version      1.9
 // @grant        none
 // @run-at       document-idle
 // @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
-// @match        https://worker-snowy-cake-fcf5.cueisdi.workers.dev/watch?v=*
-// @match        https://piped-instances.kavin.rocks/watch?v=*
+// @match        https://piped.lunar.icu/watch?v=*
+// @match        https://piped.darkness.services/watch?v=*
+// @match        https://piped.video/watch?v=*
+// @match        https://piped.projectsegfau.lt/watch?v=*
+// @match        https://piped.us.projectsegfau.lt/watch?v=*
+// @match        https://piped.adminforge.de/watch?v=*
+// @match        https://piped.astartes.nl/watch?v=*
+// @match        https://piped.drgns.space/watch?v=*
+// @match        https://piped.ngn.tf/watch?v=*
 // ==/UserScript==
 
 (() => {
