@@ -6,17 +6,20 @@ MANUAL_DOMAINS = [
     # Add more manual domains here if needed
 ]
 
+def fetch_final_url(url):
+    try:
+        response = requests.head(url, allow_redirects=True)
+        response.raise_for_status()
+        return response.url
+    except requests.RequestException as e:
+        raise RuntimeError(f"Failed to fetch data from {url}: {e}")
+
 def fetch_domains(api_urls):
-    domains = []
+    final_urls = []
     for url in api_urls:
-        try:
-            response = requests.get(url)
-            response.raise_for_status()
-            domains.extend(instance["api_url"] for instance in response.json())
-        except requests.RequestException as e:
-            raise RuntimeError(f"Failed to fetch data from {url}: {e}")
-    domains.extend(MANUAL_DOMAINS)
-    return domains
+        final_url = fetch_final_url(url)
+        final_urls.append(final_url)
+    return final_urls
 
 def follow_and_get_watch_urls(domains):
     watch_urls = []
@@ -76,7 +79,7 @@ def increment_version(script_path):
         raise RuntimeError(f"An error occurred while updating version: {e}")
 
 def main():
-    primary_url = "https://worker-snowy-cake-fcf5.cueisdi.workers.dev/"
+    primary_url = "https://piped.privacydev.net/"
     fallback_url = "https://piped-instances.kavin.rocks/"
     api_urls = [primary_url, fallback_url]
     try:
