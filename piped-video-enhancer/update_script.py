@@ -2,6 +2,7 @@ import os
 import urllib.request
 from urllib.parse import urlparse
 from urllib.error import URLError, HTTPError
+import json
 
 MANUAL_DOMAINS = [
     "https://piped.privacydev.net/",
@@ -13,11 +14,11 @@ def fetch_domains(api_urls):
     for url in api_urls:
         try:
             with urllib.request.urlopen(url) as response:
-                data = response.read().decode("utf-8")
-                domains.extend(instance["api_url"] for instance in data.json())
+                data = json.loads(response.read().decode("utf-8"))
+                domains.extend(instance["api_url"] for instance in data)
                 # If the primary URL is successfully accessed, exit the loop
                 break
-        except URLError as e:
+        except (URLError, HTTPError) as e:
             print(f"Failed to fetch data from {url}: {e}")
             if url == api_urls[-1]:  # If it's the last URL (fallback), raise an error
                 raise RuntimeError("All URLs are unreachable")
