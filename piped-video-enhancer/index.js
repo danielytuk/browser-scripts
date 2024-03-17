@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         Piped Video Enhancer
+// @name         Piped Video Enhancer
 // @description  Enhances the Piped video player interface by hiding the navbar and extending the video display area
 // @author       danielytuk
-// @version      1.10
+// @version      1.11
 // @grant        none
 // @run-at       document-idle
 // @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
-// @match        https://piped.lunar.icu/watch?v=*
-// @match        https://piped.darkness.services/watch?v=*
-// @match        https://piped.video/watch?v=*
+// @match        https://piped.privacydev.net//watch?v=*
+// @match        https://piped-instances.kavin.rocks//watch?v=*
 // @match        https://piped.projectsegfau.lt/watch?v=*
 // @match        https://piped.us.projectsegfau.lt/watch?v=*
 // @match        https://piped.adminforge.de/watch?v=*
