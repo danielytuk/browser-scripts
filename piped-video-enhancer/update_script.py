@@ -59,25 +59,21 @@ def update_script_match_lines(script_path, new_domains):
         "// @icon"
     ]
     updated_lines = []
-    user_script_started = user_script_ended = False
+    user_script_started = False
     watch_urls = follow_and_get_watch_urls(new_domains)
     with open(script_path, "r+") as file:
         lines = file.readlines()
         for line in lines:
             if line.startswith("// ==UserScript=="):
                 user_script_started = True
-            elif line.startswith("// ==/UserScript=="):
-                user_script_ended = True
-                updated_lines.extend([f"// @match        {watch_url}\n" for watch_url in watch_urls])
-                updated_lines.append(line)
-            elif user_script_started and not user_script_ended:
-                if any(line.startswith(essential) for essential in essential_lines):
-                    updated_lines.append(line)
-                if line.startswith("// @icon"):
+            if user_script_started:
+                if line.startswith("// @match"):
+                    continue
+                if line.startswith("// ==/UserScript=="):
                     updated_lines.extend([f"// @match        {watch_url}\n" for watch_url in watch_urls])
-        
+                updated_lines.append(line)
         file.seek(0)
-        file.writelines(lines[:2] + updated_lines + lines[len(updated_lines) + 2:])
+        file.writelines(updated_lines)
 
 def remove_duplicate_lines(script_path):
     unique_lines = set()
