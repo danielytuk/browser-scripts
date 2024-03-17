@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name         Ideal Search Settings for Searx
 // @description  Automatically sets ideal search parameters for enhanced search experience
+// @author       danielytuk
 // @version      1.0
 // @grant        none
 // @run-at       document-start
