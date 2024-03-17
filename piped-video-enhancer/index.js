@@ -3,9 +3,18 @@
 // @description  Enhances the Piped video player interface by hiding the navbar, extending the video display area, and setting video resolution to 1080p automatically
 // @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
 // @grant        none
+// @require      https://cdn.jsdelivr.net/npm/@violentmonkey/dom@2
 // @author       danielytuk
 // @version      1.18
 // @run-at       document-idle
+// @match        https://piped-instances.kavin.rocks/watch?v=*
+// @match        https://piped.privacydev.net/watch?v=*
+// @match        https://piped.us.projectsegfau.lt/watch?v=*
+// @match        https://piped.adminforge.de/watch?v=*
+// @match        https://piped.astartes.nl/watch?v=*
+// @match        https://piped.drgns.space/watch?v=*
+// @match        https://piped.ngn.tf/watch?v=*
+// ==/UserScript==
 
 (() => {
     'use strict';
