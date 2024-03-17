@@ -1,6 +1,7 @@
 import os
-import requests
+import urllib.request
 from urllib.parse import urlparse
+from urllib.error import URLError, HTTPError
 
 MANUAL_DOMAINS = [
     "https://piped.privacydev.net/",
@@ -11,10 +12,10 @@ def fetch_domains(api_urls):
     domains = []
     for url in api_urls:
         try:
-            response = requests.get(url)
-            response.raise_for_status()
-            domains.extend(instance["api_url"] for instance in response.json())
-        except requests.RequestException as e:
+            with urllib.request.urlopen(url) as response:
+                data = response.read().decode("utf-8")
+                domains.extend(instance["api_url"] for instance in data.json())
+        except (URLError, HTTPError) as e:
             raise RuntimeError(f"Failed to fetch data from {url}: {e}")
     domains.extend(MANUAL_DOMAINS)
     return domains
@@ -23,11 +24,10 @@ def follow_and_get_watch_urls(domains):
     watch_urls = []
     for domain in domains:
         try:
-            response = requests.head(domain, allow_redirects=True)
-            response.raise_for_status()
-            final_url = f"{response.url}/watch?v=*" if not response.url.endswith('/watch?v=*') else response.url
-            watch_urls.append(final_url)
-        except requests.RequestException as e:
+            with urllib.request.urlopen(domain) as response:
+                final_url = f"{response.url}/watch?v=*" if not response.url.endswith('/watch?v=*') else response.url
+                watch_urls.append(final_url)
+        except (URLError, HTTPError) as e:
             raise RuntimeError(f"Failed to follow redirect for {domain}: {e}")
     return watch_urls
 
@@ -48,8 +48,7 @@ def update_script_match_lines(script_path, new_domains):
         "// @icon"
     }
     updated_lines = []
-    user_script_started = False
-    user_script_ended = False
+    user_script_started = user_script_ended = False
     with open(script_path, "r+") as file:
         lines = file.readlines()
         for line in lines:
@@ -59,15 +58,14 @@ def update_script_match_lines(script_path, new_domains):
                 user_script_ended = True
                 watch_urls = follow_and_get_watch_urls(new_domains)
                 updated_lines.extend([f"// @match        {watch_url}\n" for watch_url in watch_urls])
-            elif user_script_started and not user_script_ended:
-                if any(line.startswith(essential) for essential in essential_lines):
-                    updated_lines.append(line)
+            elif user_script_started and not user_script_ended and any(line.startswith(essential) for essential in essential_lines):
+                updated_lines.append(line)
         
         file.seek(0)
         file.writelines(lines[:2] + updated_lines + lines[len(updated_lines) + 2:])
 
 def remove_duplicate_lines(script_path):
-    unique_lines = {}
+    unique_lines = set()
     with open(script_path, "r+") as file:
         lines = file.readlines()
         file.seek(0)
@@ -75,7 +73,7 @@ def remove_duplicate_lines(script_path):
         for line in lines:
             if line not in unique_lines:
                 file.write(line)
-                unique_lines[line] = True
+                unique_lines.add(line)
 
 def increment_version(script_path):
     try:
