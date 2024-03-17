@@ -2,6 +2,7 @@
 // @name         Piped Video Enhancer
 // @description  Enhances the Piped video player interface by hiding the navbar, extending the video display area, and setting video resolution to 1080p automatically
 // @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
+// @require      https://cdn.jsdelivr.net/npm/@violentmonkey/dom@2
 // @grant        none
 // @author       danielytuk
 // @version      1.21
