@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Ideal Search Settings
+// @name         Ideal Search Settings for Searx
 // @description  Automatically sets ideal search parameters for enhanced search experience
 // @version      1.0
 // @grant        none
