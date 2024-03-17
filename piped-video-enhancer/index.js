@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Piped Video Enhancer
-// @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
-// @version      1.16
-// @author       danielytuk
 // @description  Enhances the Piped video player interface by hiding the navbar, extending the video display area, and setting video resolution to 1080p automatically
+// @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
 // @grant        none
-// @name         Piped Video Enhancer
+// @author       danielytuk
+// @version      1.17
 // @run-at       document-idle
+// @name         Piped Video Enhancer
 // @name         Piped Video Enhancer
 // @match        https://piped-instances.kavin.rocks/watch?v=*
 
