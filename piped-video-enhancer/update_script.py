@@ -43,7 +43,7 @@ def extract_base_domain(url):
     raise ValueError("Invalid URL format. Must start with 'http://' or 'https://'")
 
 def update_script_match_lines(script_path, new_domains):
-    essential_lines = {
+    essential_lines = [
         "// @name",
         "// @description",
         "// @author",
@@ -51,7 +51,7 @@ def update_script_match_lines(script_path, new_domains):
         "// @grant",
         "// @run-at",
         "// @icon"
-    }
+    ]
     updated_lines = []
     user_script_started = user_script_ended = False
     with open(script_path, "r+") as file:
@@ -63,8 +63,14 @@ def update_script_match_lines(script_path, new_domains):
                 user_script_ended = True
                 watch_urls = follow_and_get_watch_urls(new_domains)
                 updated_lines.extend([f"// @match        {watch_url}\n" for watch_url in watch_urls])
-            elif user_script_started and not user_script_ended and any(line.startswith(essential) for essential in essential_lines):
-                updated_lines.append(line)
+                updated_lines.append(line)  # Add the closing UserScript line
+            elif user_script_started and not user_script_ended:
+                # Add back essential lines
+                if any(line.startswith(essential) for essential in essential_lines):
+                    updated_lines.append(line)
+                # Add the updated match lines before the original UserScript closing line
+                if line.startswith("// @icon"):
+                    updated_lines.extend([f"// @match        {watch_url}\n" for watch_url in watch_urls])
         
         file.seek(0)
         file.writelines(lines[:2] + updated_lines + lines[len(updated_lines) + 2:])
