@@ -48,6 +48,7 @@
 // @match https://pipedapi-libre.kavin.rocks/watch?v=*
 // @match https://api.piped.projectsegfau.lt/watch?v=*
 // @match https://pipedapi.us.projectsegfau.lt/watch?v=*
+// @match https://api.piped.privacydev.net/watch?v=*
 // @match https://pipedapi.smnz.de/watch?v=*
 // @match https://pipedapi.adminforge.de/watch?v=*
 // @match https://pipedapi.astartes.nl/watch?v=*
