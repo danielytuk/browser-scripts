@@ -17,7 +17,9 @@ def fetch_domains(api_urls, max_retries=3):
         retries = 0
         while retries < max_retries:
             try:
-                with urlopen(url) as response:
+                headers = {"User-Agent": "Mozilla/5.0"}
+                req = Request(url, headers=headers)
+                with urlopen(req) as response:
                     data = json.loads(response.read().decode("utf-8"))
                     domains.extend(entry["api_url"] for entry in data)
                     break
@@ -27,7 +29,7 @@ def fetch_domains(api_urls, max_retries=3):
                 if retries == max_retries:
                     print(f"Reached max retries for {url}.")
                     break
-                time.sleep(random.uniform(1, 3))  # Randomized sleep between 1 to 3 seconds
+                time.sleep(random.uniform(1, 3))
         else:
             raise RuntimeError(f"All retries failed for {url}")
 
@@ -107,7 +109,6 @@ def generate_random_string(length):
     return ''.join(random.choice(letters_and_digits) for i in range(length))
 
 def pretend_to_be_real_person():
-    # Simulate human-like behavior
     first_names = ["John", "Emma", "Michael", "Sophia", "David", "Olivia", "James", "Ava"]
     last_names = ["Smith", "Johnson", "Williams", "Jones", "Brown", "Davis", "Miller", "Wilson"]
     email_providers = ["gmail.com", "yahoo.com", "outlook.com", "hotmail.com"]
