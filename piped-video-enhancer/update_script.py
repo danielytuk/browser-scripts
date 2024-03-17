@@ -18,11 +18,16 @@ def fetch_final_url(url):
     try:
         with urlopen(extract_base_domain(url)) as response:
             return response.url.rstrip("/")
-    except HTTPError as e:
-        raise RuntimeError(f"Failed to fetch data from {url}: {e}")
+    except (HTTPError, ValueError):
+        return None
 
 def fetch_domains(api_urls):
-    return [fetch_final_url(url) for url in api_urls] + MANUAL_DOMAINS
+    final_urls = []
+    for url in api_urls:
+        final_url = fetch_final_url(url)
+        if final_url:
+            final_urls.append(final_url)
+    return final_urls + MANUAL_DOMAINS
 
 def follow_and_get_watch_urls(domains):
     return [f"{domain.rstrip('/')}/watch?v=*" for domain in domains]
@@ -59,16 +64,18 @@ def increment_version(script_path):
             file.writelines(lines)
             file.truncate()
     except Exception as e:
-        raise RuntimeError(f"An error occurred while updating version: {e}")
+        print(f"An error occurred while updating version: {e}")
 
 def main():
     api_urls = ["https://piped.privacydev.net", "https://piped-instances.kavin.rocks"]
     try:
         script_path = os.path.join(os.getenv("GITHUB_WORKSPACE"), "piped-video-enhancer", "index.js")
-        update_script_match_lines(script_path, fetch_domains(api_urls))
-        increment_version(script_path)
-    except (RuntimeError, ValueError) as e:
-        print(e)
+        domains = fetch_domains(api_urls)
+        if domains:
+            update_script_match_lines(script_path, domains)
+            increment_version(script_path)
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
     main()
