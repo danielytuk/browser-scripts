@@ -54,6 +54,7 @@ def update_script_match_lines(script_path, new_domains):
     ]
     updated_lines = []
     user_script_started = user_script_ended = False
+    watch_urls = follow_and_get_watch_urls(new_domains)  # Move this line here
     with open(script_path, "r+") as file:
         lines = file.readlines()
         for line in lines:
@@ -61,7 +62,6 @@ def update_script_match_lines(script_path, new_domains):
                 user_script_started = True
             elif line.startswith("// ==/UserScript=="):
                 user_script_ended = True
-                watch_urls = follow_and_get_watch_urls(new_domains)
                 updated_lines.extend([f"// @match        {watch_url}\n" for watch_url in watch_urls])
                 updated_lines.append(line)  # Add the closing UserScript line
             elif user_script_started and not user_script_ended:
