@@ -3,7 +3,6 @@ import json
 import time
 import random
 import string
-from urllib.parse import urlparse
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
@@ -14,21 +13,11 @@ MANUAL_DOMAINS = [
 
 def fetch_domains(api_urls, max_retries=3):
     domains = []
-    user_agents = [
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36",
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0",
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",
-    ]
-
     for url in api_urls:
         retries = 0
         while retries < max_retries:
             try:
-                user_agent = random.choice(user_agents)
-                request = Request(url, headers={"User-Agent": user_agent})
-                with urlopen(request) as response:
+                with urlopen(url) as response:
                     data = json.loads(response.read().decode("utf-8"))
                     domains.extend(entry["api_url"] for entry in data)
                     break
@@ -47,22 +36,13 @@ def fetch_domains(api_urls, max_retries=3):
 
 def follow_and_get_watch_urls(domains):
     watch_urls = []
-    user_agents = [
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36",
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0",
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",
-    ]
     for domain in domains:
         try:
-            user_agent = random.choice(user_agents)
-            request = Request(domain, headers={"User-Agent": user_agent})
-            with urlopen(request) as response:
+            with urlopen(domain) as response:
                 final_url = f"{response.url}/watch?v=*" if not response.url.endswith('/watch?v=*') else response.url
                 watch_urls.append(final_url)
         except (URLError, HTTPError) as e:
-            raise RuntimeError(f"Failed to follow redirect for {domain}: {e}")
+            raise RuntimeError(f"Failed to fetch watch URLs for {domain}: {e}")
     return watch_urls
 
 def update_script_match_lines(script_path, new_domains):
