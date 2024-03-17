@@ -3,15 +3,15 @@ import requests
 import re
 
 def fetch_domains(api_urls):
-    final_domains = []
+    domain_urls = []
     for url in api_urls:
         try:
             response = requests.get(url, allow_redirects=True)
             response.raise_for_status()
-            final_domains.append(response.url.rstrip('/'))
+            domain_urls.append(response.url.rstrip('/'))
         except requests.RequestException as e:
             print(f"Failed to fetch data from {url}: {e}")
-    return final_domains
+    return domain_urls
 
 def update_script_match_lines(script_path, new_domains):
     try:
