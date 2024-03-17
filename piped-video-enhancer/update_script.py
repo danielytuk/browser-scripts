@@ -3,15 +3,28 @@ import requests
 import re
 
 def fetch_domains(api_urls):
-    domain_urls = []
     for url in api_urls:
         try:
-            response = requests.get(url, allow_redirects=True)
+            response = requests.get(url)
             response.raise_for_status()
-            domain_urls.append(response.url.rstrip('/'))
+            return [instance["api_url"] for instance in response.json()]
         except requests.RequestException as e:
             print(f"Failed to fetch data from {url}: {e}")
-    return domain_urls
+    return []
+
+def follow_and_get_watch_urls(domains):
+    watch_urls = []
+    for domain in domains:
+        try:
+            response = requests.head(domain, allow_redirects=True)
+            response.raise_for_status()
+            final_url = response.url
+            if not final_url.endswith('/watch?v=*'):
+                final_url += '/watch?v=*'
+            watch_urls.append(final_url)
+        except requests.RequestException as e:
+            print(f"Failed to follow redirect for {domain}: {e}")
+    return watch_urls
 
 def update_script_match_lines(script_path, new_domains):
     try:
@@ -37,7 +50,8 @@ def update_script_match_lines(script_path, new_domains):
             for line in source_file:
                 line_stripped = line.strip()
                 if line_stripped.startswith("// ==/UserScript=="):
-                    updated_lines.extend([f"// @match        {domain}/watch?v=*\n" for domain in new_domains])
+                    watch_urls = follow_and_get_watch_urls(new_domains)
+                    updated_lines.extend([f"// @match        {watch_url}\n" for watch_url in watch_urls])
                     updated_lines.append(line)
                     found_user_script_end = True
                     break
