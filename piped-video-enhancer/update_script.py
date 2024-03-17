@@ -70,8 +70,8 @@ def increment_version(script_path):
         print(f"An error occurred while updating version: {e}")
 
 def main():
-    primary_url = "https://piped-instances.kavin.rocks/"
-    fallback_url = "https://worker-snowy-cake-fcf5.cueisdi.workers.dev/"
+    primary_url = "https://worker-snowy-cake-fcf5.cueisdi.workers.dev/"
+    fallback_url = "https://piped-instances.kavin.rocks/"
     domains = fetch_domains([primary_url, fallback_url])
 
     script_path = os.path.join(os.getenv("GITHUB_WORKSPACE"), "piped-video-enhancer", "index.js")
