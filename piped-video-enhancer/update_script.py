@@ -1,26 +1,43 @@
 import os
 import requests
-import re
 
 def fetch_domains(api_url, fallback_url):
     try:
-        return {instance["api_url"] for instance in requests.get(api_url).json()}
-    except requests.RequestException:
-        return {instance["api_url"] for instance in requests.get(fallback_url).json()}
+        response = requests.get(api_url)
+        response.raise_for_status()
+        return [instance["api_url"] for instance in response.json()]
+    except requests.RequestException as e:
+        print(f"Failed to fetch data from {api_url}: {e}")
+        print(f"Using fallback URL: {fallback_url}")
+        try:
+            response = requests.get(fallback_url)
+            response.raise_for_status()
+            return [instance["api_url"] for instance in response.json()]
+        except requests.RequestException as e:
+            print(f"Failed to fetch data from fallback URL {fallback_url}: {e}")
+            return []
 
-primary_url = "https://piped-instances.kavin.rocks/"
-fallback_url = "https://worker-snowy-cake-fcf5.cueisdi.workers.dev/"
-domains = fetch_domains(primary_url, fallback_url)
+def update_script_match_lines(script_path, new_match_lines):
+    try:
+        with open(script_path, "r") as file:
+            script_content = file.readlines()
 
-script_path = os.path.join(os.getenv("GITHUB_WORKSPACE"), "piped-video-enhancer", "index.js")
-with open(script_path, "r") as file:
-    script_content = file.read()
+        with open(script_path, "w") as file:
+            for line in script_content:
+                if not any(match_line in line for match_line in new_match_lines):
+                    file.write(line)
+            file.writelines(new_match_lines)
+    except Exception as e:
+        print(f"An error occurred while updating match lines: {e}")
 
-updated_match_line = re.sub(
-    r"(\/\/ @match\s+.+\n)",
-    lambda match: f"{match.group(0)} {' *://'.join(domains)}/watch?v=*\n",
-    script_content,
-)
+def main():
+    primary_url = "https://piped-instances.kavin.rocks/"
+    fallback_url = "https://worker-snowy-cake-fcf5.cueisdi.workers.dev/"
+    domains = fetch_domains(primary_url, fallback_url)
 
-with open(script_path, "w") as file:
-    file.write(updated_match_line)
+    script_path = os.path.join(os.getenv("GITHUB_WORKSPACE"), "piped-video-enhancer", "index.js")
+    new_match_lines = [f"// @match {domain.rstrip('/')}/watch?v=*\n" for domain in domains]
+    update_script_match_lines(script_path, new_match_lines)
+
+if __name__ == "__main__":
+    main()
