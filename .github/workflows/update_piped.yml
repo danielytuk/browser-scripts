@@ -2,7 +2,7 @@ name: Update piped-video-enhancer Domains
 
 on:
   schedule:
-    - cron: "0 2 * * 1-5"
+    - cron: "0 1-2 * * 3-5"
   workflow_dispatch:
 
 jobs:
@@ -14,8 +14,11 @@ jobs:
         with:
           python-version: '3.x'
       - name: Execute Script
+        id: execute_script
         run: |
           python ${{ github.workspace }}/piped-video-enhancer/update_script.py
+      - name: Print Script Output
+        run: echo "${{ steps.execute_script.outputs.script_output }}"
       - name: Commit and push changes
         run: |
           cd ${{ github.workspace }}
