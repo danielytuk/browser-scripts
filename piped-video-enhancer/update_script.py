@@ -21,17 +21,17 @@ def fetch_domains(api_url, fallback_url):
 def update_script_match_lines(script_path, new_domains):
     try:
         updated_lines = []
-        found_match_line = False
+        existing_match_lines_removed = False
         with open(script_path, "r") as file:
             for line in file:
-                line_stripped = line.strip()
-                if line_stripped.startswith("// @match"):
-                    found_match_line = True
-                    updated_lines.append(line)
-                elif found_match_line and not line_stripped:
+                if line.strip().startswith("// @match"):
+                    existing_match_lines_removed = True
+                    continue
+                if existing_match_lines_removed and line.strip() == "// ==/UserScript==":
                     updated_lines.extend([f"// @match        {domain.rstrip('/')}/watch?v=*\n" for domain in new_domains])
-                    found_match_line = False
-                else:
+                    updated_lines.append(line)
+                    existing_match_lines_removed = False
+                elif not existing_match_lines_removed:
                     updated_lines.append(line)
 
         with open(script_path, "w") as file:
