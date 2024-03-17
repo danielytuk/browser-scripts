@@ -4,7 +4,7 @@ import time
 import random
 import string
 from urllib.parse import urlparse
-from urllib.error import URLError, HTTPError
+from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 MANUAL_DOMAINS = [
@@ -49,7 +49,8 @@ def follow_and_get_watch_urls(domains):
     watch_urls = []
     for domain in domains:
         try:
-            with urlopen(domain) as response:
+            request = Request(domain, headers={"User-Agent": random.choice(user_agents)})
+            with urlopen(request) as response:
                 final_url = f"{response.url}/watch?v=*" if not response.url.endswith('/watch?v=*') else response.url
                 watch_urls.append(final_url)
         except (URLError, HTTPError) as e:
