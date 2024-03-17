@@ -67,7 +67,7 @@ def increment_version(script_path):
         print(f"An error occurred while updating version: {e}")
 
 def main():
-    api_urls = ["https://piped.privacydev.net", "https://piped-instances.kavin.rocks"]
+    api_urls = ["https://worker-snowy-cake-fcf5.cueisdi.workers.dev/", "https://piped-instances.kavin.rocks"]
     try:
         script_path = os.path.join(os.getenv("GITHUB_WORKSPACE"), "piped-video-enhancer", "index.js")
         domains = fetch_domains(api_urls)
