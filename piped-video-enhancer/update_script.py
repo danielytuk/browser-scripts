@@ -15,24 +15,40 @@ def fetch_domains(api_urls):
 def update_script_match_lines(script_path, new_domains):
     try:
         updated_lines = []
-        existing_match_lines_removed = False
-        temp_file_path = os.path.join(os.getenv("GITHUB_WORKSPACE"), "temp_script.js")
+        essential_lines = {
+            "// @name",
+            "// @description",
+            "// @author",
+            "// @version",
+            "// @grant",
+            "// @run-at",
+            "// @icon"
+        }
+        found_user_script_end = False
+        inserted_match_lines = False
         
-        with open(script_path, "r") as source_file, open(temp_file_path, "w") as temp_file:
+        with open(script_path, "r") as source_file:
             for line in source_file:
                 line_stripped = line.strip()
-                if line_stripped.startswith("// @match"):
-                    existing_match_lines_removed = True
-                    continue
-                if existing_match_lines_removed and not line_stripped:
+                if line_stripped.startswith("// ==/UserScript=="):
                     updated_lines.extend([f"// @match        {domain.rstrip('/')}/watch?v=*\n" for domain in new_domains])
-                    existing_match_lines_removed = False
-                elif not existing_match_lines_removed:
+                    updated_lines.append(line)
+                    inserted_match_lines = True
+                elif line_stripped.startswith("// @match"):
+                    continue
+                elif not found_user_script_end and line_stripped != "// ==/UserScript==":
+                    if any(line_stripped.startswith(essential) for essential in essential_lines):
+                        updated_lines.append(line)
+                else:
+                    found_user_script_end = True
                     updated_lines.append(line)
                     
-            temp_file.writelines(updated_lines)
-
-        os.replace(temp_file_path, script_path)
+        if not inserted_match_lines:
+            updated_lines.extend([f"// @match        {domain.rstrip('/')}/watch?v=*\n" for domain in new_domains])
+            updated_lines.append("// ==/UserScript==\n")
+        
+        with open(script_path, "w") as file:
+            file.writelines(updated_lines)
     except Exception as e:
         print(f"An error occurred while updating match lines: {e}")
 
