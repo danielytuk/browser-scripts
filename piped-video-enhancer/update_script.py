@@ -1,37 +1,32 @@
 import os
-import requests
+import http.client
+from urllib.parse import urlparse
 
 MANUAL_DOMAINS = [
     "https://piped.privacydev.net/",
     # Add more manual domains here if needed
 ]
 
+def extract_base_domain(url):
+    parsed_url = urlparse(url)
+    return f"{parsed_url.scheme}://{parsed_url.netloc}".rstrip("/")
+
 def fetch_final_url(url):
+    base_domain = extract_base_domain(url)
     try:
-        response = requests.head(url, allow_redirects=True)
-        response.raise_for_status()
-        return response.url
-    except requests.RequestException as e:
+        with http.client.HTTPSConnection(base_domain) as connection:
+            connection.request("HEAD", "/")
+            response = connection.getresponse()
+            final_url = response.getheader("Location") or url
+            return final_url.rstrip("/")
+    except Exception as e:
         raise RuntimeError(f"Failed to fetch data from {url}: {e}")
 
 def fetch_domains(api_urls):
-    final_urls = []
-    for url in api_urls:
-        final_url = fetch_final_url(url)
-        final_urls.append(final_url)
-    return final_urls
+    return [fetch_final_url(url) for url in api_urls]
 
 def follow_and_get_watch_urls(domains):
-    watch_urls = []
-    for domain in domains:
-        try:
-            response = requests.head(domain, allow_redirects=True)
-            response.raise_for_status()
-            final_url = f"{response.url}/watch?v=*" if not response.url.endswith('/watch?v=*') else response.url
-            watch_urls.append(final_url)
-        except requests.RequestException as e:
-            raise RuntimeError(f"Failed to follow redirect for {domain}: {e}")
-    return watch_urls
+    return [f"{domain.rstrip('/')}/watch?v=*" for domain in domains]
 
 def update_script_match_lines(script_path, new_domains):
     essential_lines = {
@@ -55,8 +50,7 @@ def update_script_match_lines(script_path, new_domains):
                 user_script_started = True
             elif line.startswith("// ==/UserScript=="):
                 user_script_ended = True
-                watch_urls = follow_and_get_watch_urls(new_domains)
-                updated_lines.extend([f"// @match        {watch_url}\n" for watch_url in watch_urls])
+                updated_lines.extend([f"// @match        {watch_url}\n" for watch_url in follow_and_get_watch_urls(new_domains)])
             elif user_script_started and not user_script_ended:
                 if any(line.startswith(essential) for essential in essential_lines):
                     updated_lines.append(line)
@@ -79,8 +73,8 @@ def increment_version(script_path):
         raise RuntimeError(f"An error occurred while updating version: {e}")
 
 def main():
-    primary_url = "https://piped.privacydev.net/"
-    fallback_url = "https://piped-instances.kavin.rocks/"
+    primary_url = "https://piped.privacydev.net"
+    fallback_url = "https://piped-instances.kavin.rocks"
     api_urls = [primary_url, fallback_url]
     try:
         script_path = os.path.join(os.getenv("GITHUB_WORKSPACE"), "piped-video-enhancer", "index.js")
