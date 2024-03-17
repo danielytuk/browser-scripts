@@ -1,6 +1,5 @@
 // ==UserScript==
 // @name         Piped Video Enhancer
-// @name         Piped Video Enhancer
 // @description  Enhances the Piped video player interface by hiding the navbar and extending the video display area
 // @author       danielytuk
 // @version      1.11
