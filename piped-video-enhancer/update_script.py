@@ -25,28 +25,22 @@ def update_script_match_lines(script_path, new_domains):
             "// @icon"
         }
         found_user_script_end = False
-        inserted_match_lines = False
         
         with open(script_path, "r") as source_file:
             for line in source_file:
                 line_stripped = line.strip()
-                if line_stripped.startswith("// ==/UserScript=="):
-                    updated_lines.extend([f"// @match        {domain.rstrip('/')}/watch?v=*\n" for domain in new_domains])
-                    updated_lines.append(line)
-                    inserted_match_lines = True
-                elif line_stripped.startswith("// @match"):
+                if line_stripped.startswith("// @match"):
                     continue
                 elif not found_user_script_end and line_stripped != "// ==/UserScript==":
                     if any(line_stripped.startswith(essential) for essential in essential_lines):
                         updated_lines.append(line)
-                else:
-                    found_user_script_end = True
+                elif found_user_script_end:
                     updated_lines.append(line)
                     
-        if not inserted_match_lines:
-            updated_lines.extend([f"// @match        {domain.rstrip('/')}/watch?v=*\n" for domain in new_domains])
-            updated_lines.append("// ==/UserScript==\n")
-        
+                if line_stripped == "// ==/UserScript==":
+                    found_user_script_end = True
+                    updated_lines.extend([f"// @match        {domain.rstrip('/')}/watch?v=*\n" for domain in new_domains])
+
         with open(script_path, "w") as file:
             file.writelines(updated_lines)
     except Exception as e:
