@@ -2,14 +2,8 @@
 // @name         Piped Video Enhancer
 // @description  Enhances the Piped video player interface by hiding the navbar and extending the video display area
 // @author       danielytuk
-// @version      1.0
+// @version      1.1
 // @grant        none
-// @match        https://piped.smnz.de/watch?v=*
- https://pipedapi.syncpundit.io *://https://pipedapi.darkness.services *://https://pipedapi.us.projectsegfau.lt *://https://pipedapi.kavin.rocks *://https://pipedapi.ducks.party *://https://pipedapi.astartes.nl *://https://pipedapi.smnz.de *://https://pipedapi-libre.kavin.rocks *://https://pipedapi.drgns.space *://https://piapi.ggtyler.dev *://https://pipedapi.r4fo.com *://https://pipedapi.coldforge.xyz *://https://pipedapi.adminforge.de *://https://piped-api.lunar.icu *://https://pipedapi.ngn.tf *://https://api.piped.privacydev.net *://https://api.piped.projectsegfau.lt/watch?v=*
- https://pipedapi.astartes.nl *://https://pipedapi.us.projectsegfau.lt *://https://pipedapi.syncpundit.io *://https://pipedapi.drgns.space *://https://pipedapi.ducks.party *://https://pipedapi.ngn.tf *://https://pipedapi-libre.kavin.rocks *://https://pipedapi.darkness.services *://https://pipedapi.smnz.de *://https://api.piped.projectsegfau.lt *://https://piapi.ggtyler.dev *://https://pipedapi.coldforge.xyz *://https://pipedapi.adminforge.de *://https://pipedapi.r4fo.com *://https://piped-api.lunar.icu *://https://pipedapi.kavin.rocks *://https://pipedapi.leptons.xyz/watch?v=*
-// @run-at       document-idle
-// @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
-// ==/UserScript==
 // @match        https://pipedapi.kavin.rocks/watch?v=*
 // @match        https://pipedapi.syncpundit.io/watch?v=*
 // @match        https://piped-api.lunar.icu/watch?v=*
@@ -26,9 +20,6 @@
 // @match        https://pipedapi.ducks.party/watch?v=*
 // @match        https://pipedapi.ngn.tf/watch?v=*
 // @match        https://pipedapi.coldforge.xyz/watch?v=*
-(() => {
-    'use strict';
-
     let handleScroll = null;
 
     const applyCinemaMode = (navbar, videoPlayer) => {
@@ -55,4 +46,3 @@
 
     checkForElements();
 })();
-// @match https://piapi.ggtyler.dev/watch?v=*
