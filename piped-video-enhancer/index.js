@@ -2,7 +2,7 @@
 // @name         Piped Video Enhancer
 // @description  Enhances the Piped video player interface by hiding the navbar and extending the video display area
 // @author       danielytuk
-// @version      1.9
+// @version      1.10
 // @grant        none
 // @run-at       document-idle
 // @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
