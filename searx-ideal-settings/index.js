@@ -2,7 +2,7 @@
 // @name         Ideal Search Settings for Searx
 // @description  Automatically sets ideal search parameters for enhanced search experience. Make sure you change "HTTP Method" to GET in Preferences.
 // @author       danielytuk
-// @version      1.2
+// @version      1.3
 // @grant        none
 // @match        https://baresearch.org/*&category_general=1&language=auto&time_range=&safesearch=0&theme=simple
 // @match        https://copp.gg/*&category_general=1&language=auto&time_range=&safesearch=0&theme=simple
