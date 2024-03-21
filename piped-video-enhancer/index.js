@@ -5,7 +5,7 @@
 // @require      https://cdn.jsdelivr.net/npm/@violentmonkey/dom@2
 // @grant        none
 // @author       danielytuk
-// @version      1.28
+// @version      1.29
 // @run-at       document-idle
 // @match        https://piped.lunar.icu/watch?v=*
 // @match        https://piped.projectsegfau.lt/watch?v=*
