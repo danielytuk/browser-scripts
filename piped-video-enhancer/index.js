@@ -20,43 +20,34 @@
 // @downloadURL  https://cdn.jsdelivr.net/gh/danielytuk/browser-scripts@raw/main/piped-video-enhancer/index.js
 // ==/UserScript==
 
-(async () => {
-    'use strict';
-    let handleScroll, handler;
-    const applyCinemaMode = (navbar, videoPlayer) => {
-        Object.assign(videoPlayer.style, { width: '100%', height: 'calc(100vh - 50px)', maxHeight: '131vh' });
-        navbar.style.display = window.scrollY ? 'block' : 'none';
-        window.addEventListener('scroll', () => navbar.style.display = window.scrollY ? 'block' : 'none');
-    };
-    const select1080pResolution = () => {
-        const resolutionsMenu = document.querySelector(".shaka-resolutions");
-        const select1080p = () => resolutionsMenu.querySelector('.explicit-resolution[data-value="1080"]')?.click();
-        resolutionsMenu && resolutionsMenu.querySelector && resolutionsMenu.querySelector('.shaka-resolutions-button')?.addEventListener('click', select1080p);
-    };
-    const checkForElements = () => {
-        const navbar = document.querySelector('nav');
-        const videoPlayer = document.querySelector('.player-container');
-        if (navbar && videoPlayer) {
-            applyCinemaMode(navbar, videoPlayer);
-            select1080pResolution();
-        } else {
-            window.requestAnimationFrame(checkForElements);
-        }
-    };
-    const observer = new MutationObserver(checkForElements);
-    observer.observe(document.body, { childList: true, subtree: true });
-    const debounceScroll = () => {
-        handleScroll = () => {
-            requestAnimationFrame(scrollHandler);
-        };
-        window.addEventListener('scroll', handler = handleScroll);
-    };
-    window.addEventListener('beforeunload', (event) => {
-        handleScroll = null;
-        window.removeEventListener('scroll', handler);
-        observer.disconnect();
-        event.preventDefault();
-    });
-    window.addEventListener('DOMContentLoaded', checkForElements);
-    debounceScroll();
+(async()=>{
+"use strict";
+let hS,h;
+const aCinemaMode=[v=>{
+    v.style.width="100%";
+    v.style.height="calc(100vh-50px)";
+    v.style.maxHeight="131vh";
+    n.style.display=w.scrollY?"block":"none";
+    w.addEventListener("scroll",()=>n.style.display=w.scrollY?"block":"none")
+},s1080pR=()=>{
+    const r=d.querySelectorAll(".shaka-resolution");
+    r.forEach(t=>t.getAttribute("data-value")==="1080"&&t.click())
+},cFE=()=>{
+    const n=d.querySelector("nav"),v=d.querySelector(".player-container");
+    if(n&&v)aCinemaMode(n,v),s1080pR()
+    else requestAnimationFrame(cFE)
+},d=document,w=window,n=d.querySelector("nav"),v=d.querySelector(".player-container");
+if(n&&v)aCinemaMode(n,v);
+s1080pR();
+const dBS=()=>{
+    hS=()=>requestAnimationFrame(hS);
+    w.addEventListener("scroll",h=hS)
+};
+w.addEventListener("beforeunload",()=>{
+    h=null;
+    w.removeEventListener("scroll",h);
+    d.querySelector(".shaka-resolutions")?d.disconnect():""
+},0);
+w.addEventListener("DOMContentLoaded",cFE);
+dBS()
 })();
