@@ -5,7 +5,7 @@
 // @require      https://cdn.jsdelivr.net/npm/@violentmonkey/dom@2
 // @grant        none
 // @author       danielytuk
-// @version      1.43
+// @version      1.44
 // @run-at       document-idle
 // @downloadURL  https://cdn.jsdelivr.net/gh/danielytuk/browser-scripts@latest/piped-video-enhancer/index.js
 // @match        https://piped.projectsegfau.lt/watch?v=*
@@ -19,34 +19,38 @@
 // @match        https://piped.ngn.tf/watch?v=*
 // ==/UserScript==
 
-(async()=>{
-"use strict";
-let hS,h;
-const aCinemaMode=[v=>{
-    v.style.width="100%";
-    v.style.height="calc(100vh-50px)";
-    v.style.maxHeight="131vh";
-    n.style.display=w.scrollY?"block":"none";
-    w.addEventListener("scroll",()=>n.style.display=w.scrollY?"block":"none")
-},s1080pR=()=>{
-    const r=d.querySelectorAll(".shaka-resolution");
-    r.forEach(t=>t.getAttribute("data-value")==="1080"&&t.click())
-},cFE=()=>{
-    const n=d.querySelector("nav"),v=d.querySelector(".player-container");
-    if(n&&v)aCinemaMode(n,v),s1080pR()
-    else requestAnimationFrame(cFE)
-},d=document,w=window,n=d.querySelector("nav"),v=d.querySelector(".player-container");
-if(n&&v)aCinemaMode(n,v);
-s1080pR();
-const dBS=()=>{
-    hS=()=>requestAnimationFrame(hS);
-    w.addEventListener("scroll",h=hS)
-};
-w.addEventListener("beforeunload",()=>{
-    h=null;
-    w.removeEventListener("scroll",h);
-    d.querySelector(".shaka-resolutions")?d.disconnect():""
-},0);
-w.addEventListener("DOMContentLoaded",cFE);
-dBS()
+(async () => {
+    "use strict";
+    let hS, h;
+    const aCinemaMode = [v => {
+        v.style.width = "100%";
+        v.style.height = "calc(100vh-50px)";
+        v.style.maxHeight = "131vh";
+        n.style.display = w.scrollY ? "block" : "none";
+        w.addEventListener("scroll", () => n.style.display = w.scrollY ? "block" : "none");
+    }, s1080pR = () => {
+        const r = d.querySelectorAll(".shaka-resolution");
+        r.forEach(t => t.getAttribute("data-value") === "1080" && t.click());
+    }, cFE = () => {
+        const n = d.querySelector("nav"), v = d.querySelector(".player-container");
+        if (n && v) aCinemaMode[0](n, v), s1080pR();
+        else requestAnimationFrame(cFE);
+    }],
+    d = document,
+    w = window,
+    n = d.querySelector("nav"),
+    v = d.querySelector(".player-container");
+    if (n && v) aCinemaMode[0](n, v);
+    s1080pR();
+    const dBS = () => {
+        hS = () => requestAnimationFrame(hS);
+        w.addEventListener("scroll", h = hS);
+    };
+    w.addEventListener("beforeunload", () => {
+        h = null;
+        w.removeEventListener("scroll", h);
+        d.querySelector(".shaka-resolutions") ? d.disconnect() : "";
+    }, 0);
+    w.addEventListener("DOMContentLoaded", cFE);
+    dBS();
 })();
