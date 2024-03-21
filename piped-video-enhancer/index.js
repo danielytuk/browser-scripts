@@ -7,7 +7,7 @@
 // @author       danielytuk
 // @version      1.44
 // @run-at       document-idle
-// @downloadURL  https://cdn.jsdelivr.net/gh/danielytuk/browser-scripts@latest/piped-video-enhancer/index.js
+// @downloadURL  https://cdn.jsdelivr.net/gh/danielytuk/browser-scripts/piped-video-enhancer/index.js
 // @match        https://piped.projectsegfau.lt/watch?v=*
 // @match        https://piped.us.projectsegfau.lt/watch?v=*
 // @match        https://piped.privacydev.net/watch?v=*
