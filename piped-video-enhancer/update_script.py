@@ -7,6 +7,7 @@ from urllib.request import Request, urlopen
 
 MANUAL_DOMAINS = [
     "https://piped.privacydev.net",
+    "https://piped.ducks.party",
     # Add more manual domains here if needed
 ]
 
