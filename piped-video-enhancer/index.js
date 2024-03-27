@@ -5,7 +5,7 @@
 // @require      https://cdn.jsdelivr.net/npm/@violentmonkey/dom@2
 // @grant        none
 // @author       danielytuk
-// @version      1.47
+// @version      1.48
 // @run-at       document-idle
 // @downloadURL  https://cdn.jsdelivr.net/gh/danielytuk/browser-scripts/piped-video-enhancer/index.js
 // @match        https://piped.lunar.icu/watch?v=*
