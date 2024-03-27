@@ -5,9 +5,11 @@
 // @require      https://cdn.jsdelivr.net/npm/@violentmonkey/dom@2
 // @grant        none
 // @author       danielytuk
-// @version      1.46
+// @version      1.47
 // @run-at       document-idle
 // @downloadURL  https://cdn.jsdelivr.net/gh/danielytuk/browser-scripts/piped-video-enhancer/index.js
+// @match        https://piped.lunar.icu/watch?v=*
+// @match        https://piped.darkness.services/watch?v=*
 // @match        https://piped.projectsegfau.lt/watch?v=*
 // @match        https://piped.us.projectsegfau.lt/watch?v=*
 // @match        https://piped.privacydev.net/watch?v=*
@@ -15,6 +17,7 @@
 // @match        https://piped.adminforge.de/watch?v=*
 // @match        https://piped.astartes.nl/watch?v=*
 // @match        https://piped.drgns.space/watch?v=*
+// @match        https://pi.ggtyler.dev/watch?v=*
 // @match        https://piped.ducks.party/watch?v=*
 // @match        https://piped.ngn.tf/watch?v=*
 // ==/UserScript==
