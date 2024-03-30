@@ -2,10 +2,9 @@
 // @name         Piped Video Enhancer
 // @description  Enhances the Piped video player interface by hiding the navbar, extending the video display area, and setting video resolution to 1080p automatically
 // @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
-// @require      https://cdn.jsdelivr.net/npm/@violentmonkey/dom@2
 // @grant        none
 // @author       danielytuk
-// @version      1.52
+// @version      1.53
 // @run-at       document-idle
 // @downloadURL  https://cdn.jsdelivr.net/gh/danielytuk/browser-scripts/piped-video-enhancer/index.js
 // @match        https://piped.lunar.icu/watch?v=*
@@ -23,36 +22,72 @@
 
 (async () => {
     "use strict";
-    let hS, h;
-    const aCinemaMode = [v => {
-        v.style.width = "100%";
-        v.style.height = "calc(100vh-50px)";
-        v.style.maxHeight = "131vh";
-        n.style.display = w.scrollY ? "block" : "none";
-        w.addEventListener("scroll", () => n.style.display = w.scrollY ? "block" : "none");
-    }, s1080pR = () => {
-        const r = d.querySelectorAll(".shaka-resolution");
-        r.forEach(t => t.getAttribute("data-value") === "1080" && t.click());
-    }, cFE = () => {
-        const n = d.querySelector("nav"), v = d.querySelector(".player-container");
-        if (n && v) aCinemaMode[0](n, v), s1080pR();
-        else requestAnimationFrame(cFE);
-    }],
-    d = document,
-    w = window,
-    n = d.querySelector("nav"),
-    v = d.querySelector(".player-container");
-    if (n && v) aCinemaMode[0](n, v);
-    s1080pR();
-    const dBS = () => {
-        hS = () => requestAnimationFrame(hS);
-        w.addEventListener("scroll", h = hS);
+
+    const applyCinemaMode = () => {
+        const videoElement = document.querySelector(".player-container");
+        const navbar = document.querySelector("nav");
+
+        if (videoElement) {
+            videoElement.style.width = "100%";
+            videoElement.style.height = "calc(100vh - 50px)";
+            videoElement.style.maxHeight = "131vh";
+        }
+
+        if (navbar) {
+            navbar.style.display = window.scrollY ? "block" : "none";
+            window.addEventListener("scroll", () => navbar.style.display = window.scrollY ? "block" : "none");
+        }
     };
-    w.addEventListener("beforeunload", () => {
-        h = null;
-        w.removeEventListener("scroll", h);
-        d.querySelector(".shaka-resolutions") ? d.disconnect() : "";
-    }, 0);
-    w.addEventListener("DOMContentLoaded", cFE);
-    dBS();
+
+    const set1080pResolution = () => {
+        const resolutions = document.querySelectorAll(".shaka-resolution");
+        resolutions.forEach(resolution => {
+            if (resolution.getAttribute("data-value") === "1080") {
+                resolution.click();
+            }
+        });
+    };
+
+    const checkForElements = () => {
+        const navbar = document.querySelector("nav");
+        const video = document.querySelector(".player-container");
+
+        if (navbar && video) {
+            applyCinemaMode();
+            set1080pResolution();
+        } else {
+            requestAnimationFrame(checkForElements);
+        }
+    };
+
+    const debounceScroll = () => {
+        let scrollHandler;
+
+        const scrollListener = () => {
+            if (!scrollHandler) {
+                scrollHandler = () => {
+                    requestAnimationFrame(() => {
+                        scrollHandler = null;
+                        applyCinemaMode();
+                    });
+                };
+                requestAnimationFrame(scrollHandler);
+            }
+        };
+
+        window.addEventListener("scroll", scrollListener);
+    };
+
+    const disconnectBeforeUnload = () => {
+        window.addEventListener("beforeunload", () => {
+            window.removeEventListener("scroll", debounceScroll);
+            document.defaultView.disconnect();
+        }, 0);
+    };
+
+    window.addEventListener("DOMContentLoaded", () => {
+        checkForElements();
+        debounceScroll();
+        disconnectBeforeUnload();
+    });
 })();
