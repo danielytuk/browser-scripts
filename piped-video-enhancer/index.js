@@ -4,12 +4,11 @@
 // @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
 // @grant        none
 // @author       danielytuk
-// @version      1.80
+// @version      1.81
 // @run-at       document-idle
 // @downloadURL  https://cdn.jsdelivr.net/gh/danielytuk/browser-scripts/piped-video-enhancer/index.js
 // @match        https://piped.lunar.icu/watch?v=*
 // @match        https://piped.projectsegfau.lt/watch?v=*
-// @match        https://piped.in.projectsegfau.lt/watch?v=*
 // @match        https://piped.privacydev.net/watch?v=*
 // @match        https://piped.smnz.de/watch?v=*
 // @match        https://piped.adminforge.de/watch?v=*
@@ -17,9 +16,10 @@
 // @match        https://piped.astartes.nl/watch?v=*
 // @match        https://piped.drgns.space/watch?v=*
 // @match        https://pi.ggtyler.dev/watch?v=*
+// @match        https://auth.minionflo.net/if/flow/login/?next=%2Fapplication%2Fo%2Fauthorize%2F%3Fclient_id%3DitqJeMzh8MceyJQ6xj9uVmYk2roNRA6SdKR1TFeZ%26redirect_uri%3Dhttps%253A%252F%252Fpiped.minionflo.net%252Foutpost.goauthentik.io%252Fcallback%253FX-authentik-auth-callback%253Dtrue%26response_type%3Dcode%26scope%3Dopenid%2Bemail%2Bprofile%2Bak_proxy%26state%3DgXZwtZGS8al7xEbsP241H0o_sbBBjgEHOtfbWR05wcA/watch?v=*
 // @match        https://yt.cdsp.cz/watch?v=*
 // @match        https://piped.reallyaweso.me/watch?v=*
-// @match        https://piped.phoenixthrush.com/watch?v=*
+// @match        https://auth.minionflo.net/if/flow/login/?next=%2Fapplication%2Fo%2Fauthorize%2F%3Fclient_id%3DitqJeMzh8MceyJQ6xj9uVmYk2roNRA6SdKR1TFeZ%26redirect_uri%3Dhttps%253A%252F%252Fpiped.minionflo.net%252Foutpost.goauthentik.io%252Fcallback%253FX-authentik-auth-callback%253Dtrue%26response_type%3Dcode%26scope%3Dopenid%2Bemail%2Bprofile%2Bak_proxy%26state%3DEuQiaBbnxgOPIeCV-ecPCrocKklva69TV4vawPmiIEo/watch?v=*
 // @match        https://piped.ducks.party/watch?v=*
 // ==/UserScript==
 
