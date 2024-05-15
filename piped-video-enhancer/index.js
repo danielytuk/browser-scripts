@@ -4,7 +4,7 @@
 // @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
 // @grant        none
 // @author       danielytuk
-// @version      1.89
+// @version      1.90
 // @run-at       document-idle
 // @downloadURL  https://cdn.jsdelivr.net/gh/danielytuk/browser-scripts/piped-video-enhancer/index.js
 // @match        https://piped.lunar.icu/watch?v=*
@@ -16,13 +16,13 @@
 // @match        https://piped.adminforge.de/watch?v=*
 // @match        https://piped.drgns.space/watch?v=*
 // @match        https://pi.ggtyler.dev/watch?v=*
-// @match        https://auth.minionflo.net/if/flow/login/?next=%2Fapplication%2Fo%2Fauthorize%2F%3Fclient_id%3DitqJeMzh8MceyJQ6xj9uVmYk2roNRA6SdKR1TFeZ%26redirect_uri%3Dhttps%253A%252F%252Fpiped.minionflo.net%252Foutpost.goauthentik.io%252Fcallback%253FX-authentik-auth-callback%253Dtrue%26response_type%3Dcode%26scope%3Dprofile%2Bopenid%2Bemail%2Bak_proxy%26state%3DcB9FrX3Vw8s38RxOwvLY0PKC8MRQG9Fc4LbkEU8Arl0/watch?v=*
+// @match        https://auth.minionflo.net/if/flow/login/?next=%2Fapplication%2Fo%2Fauthorize%2F%3Fclient_id%3DitqJeMzh8MceyJQ6xj9uVmYk2roNRA6SdKR1TFeZ%26redirect_uri%3Dhttps%253A%252F%252Fpiped.minionflo.net%252Foutpost.goauthentik.io%252Fcallback%253FX-authentik-auth-callback%253Dtrue%26response_type%3Dcode%26scope%3Dprofile%2Bopenid%2Bemail%2Bak_proxy%26state%3DoiE3IdRWP3Gz2mV5uE5rZSaP-y731mcpS1EP2DRjxjc/watch?v=*
 // @match        https://piped.ducks.party/watch?v=*
 // @match        https://piped.ngn.tf/watch?v=*
 // @match        https://piped.reallyaweso.me/watch?v=*
 // @match        https://piped.phoenixthrush.com/watch?v=*
 // @match        https://piped.private.coffee/watch?v=*
-// @match        https://auth.minionflo.net/if/flow/login/?next=%2Fapplication%2Fo%2Fauthorize%2F%3Fclient_id%3DitqJeMzh8MceyJQ6xj9uVmYk2roNRA6SdKR1TFeZ%26redirect_uri%3Dhttps%253A%252F%252Fpiped.minionflo.net%252Foutpost.goauthentik.io%252Fcallback%253FX-authentik-auth-callback%253Dtrue%26response_type%3Dcode%26scope%3Dprofile%2Bopenid%2Bemail%2Bak_proxy%26state%3DNHns2GlDArkvW4MUfNfG651KtJPN8qtTEi_wzB2nT0A/watch?v=*
+// @match        https://auth.minionflo.net/if/flow/login/?next=%2Fapplication%2Fo%2Fauthorize%2F%3Fclient_id%3DitqJeMzh8MceyJQ6xj9uVmYk2roNRA6SdKR1TFeZ%26redirect_uri%3Dhttps%253A%252F%252Fpiped.minionflo.net%252Foutpost.goauthentik.io%252Fcallback%253FX-authentik-auth-callback%253Dtrue%26response_type%3Dcode%26scope%3Dprofile%2Bopenid%2Bemail%2Bak_proxy%26state%3D-TlOloLc7sL6rkpA4WWhdV-QKLxOvK_x4DmAqvzx7Mc/watch?v=*
 // ==/UserScript==
 
 (async () => {
