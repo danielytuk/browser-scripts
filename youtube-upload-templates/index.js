@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Description Templates
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Manage & apply description templates on the video edit page
 // @author       danielytuk
 // @match        https://studio.youtube.com/*/edit
@@ -46,9 +46,7 @@
 
         // Insert UI into the YouTube Studio page
         const parentElement = document.querySelector('#video-metadata-editor > ytcp-video-metadata-editor-sidepanel');
-        if (parentElement) {
-            parentElement.insertBefore(container, parentElement.firstChild);
-        }
+        if (parentElement) parentElement.insertBefore(container, parentElement.firstChild);
     }
 
     // Apply the selected template to the description box
@@ -80,9 +78,7 @@
         formContainer.appendChild(form);
 
         const parentElement = document.querySelector('#video-metadata-editor > ytcp-video-metadata-editor-sidepanel');
-        if (parentElement) {
-            parentElement.insertBefore(formContainer, parentElement.firstChild);
-        }
+        if (parentElement) parentElement.insertBefore(formContainer, parentElement.firstChild);
     }
 
     // Hide the form to add a new template
@@ -209,9 +205,7 @@
 
     // Observe DOM changes to create the template UI when the page loads
     const observer = new MutationObserver(() => {
-        if (document.querySelector('#video-metadata-editor > ytcp-video-metadata-editor-sidepanel') && !document.getElementById('template-selector')) {
-            createTemplateDropdown();
-        }
+        if (document.querySelector('#video-metadata-editor > ytcp-video-metadata-editor-sidepanel') && !document.getElementById('template-selector')) createTemplateDropdown();
     });
     observer.observe(document.body, { childList: true, subtree: true });
 })();
