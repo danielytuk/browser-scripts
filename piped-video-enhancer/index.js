@@ -4,25 +4,22 @@
 // @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
 // @grant        none
 // @author       danielytuk
-// @version      1.156
+// @version      1.157
 // @run-at       document-idle
 // @downloadURL  https://cdn.jsdelivr.net/gh/danielytuk/browser-scripts/piped-video-enhancer/index.js
 // @match        https://piped.projectsegfau.lt/watch?v=*
 // @match        https://piped.in.projectsegfau.lt/watch?v=*
 // @match        https://piped.smnz.de/watch?v=*
 // @match        https://piped.adminforge.de/watch?v=*
-// @match        https://piped.yt/watch?v=*
 // @match        https://piped.astartes.nl/watch?v=*
 // @match        https://piped.drgns.space/watch?v=*
-// @match        https://auth.minionflo.net/if/flow/login/?next=%2Fapplication%2Fo%2Fauthorize%2F%3Fclient_id%3DitqJeMzh8MceyJQ6xj9uVmYk2roNRA6SdKR1TFeZ%26redirect_uri%3Dhttps%253A%252F%252Fpiped.minionflo.net%252Foutpost.goauthentik.io%252Fcallback%253FX-authentik-auth-callback%253Dtrue%26response_type%3Dcode%26scope%3Dprofile%2Bopenid%26state%3DeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2F1dGhlbnRpay5pby9vdXRwb3N0L2l0cUplTXpoOE1jZXlKUTZ4ajl1Vm1ZazJyb05SQTZTZEtSMVRGZVoiLCJzaWQiOiJQVkhEQ1Q1SFkzNzREVzc1NUxGUFBZWE1HVDNMRTRSRzJWRkVSTVdaR1hTN0FYR0VCV01BIiwic3RhdGUiOiI0enlQaTVRWmdSd1pNd0h0eDFVakZjb1V1anQzVzhhNWYxeTQybUotSkVnIiwicmVkaXJlY3QiOiJodHRwczovL3BpcGVkLm1pbmlvbmZsby5uZXQvIn0.LVgnFrH9VLaykT45-hPcfyJVi2ij3kzuCSXhvOFjI6U/watch?v=*
-// @match        https://piped.ducks.party/watch?v=*
 // @match        https://piped.ngn.tf/watch?v=*
-// @match        https://yt.cdsp.cz/watch?v=*
 // @match        https://piped.reallyaweso.me/watch?v=*
+// @match        https://piped.phoenixthrush.com/watch?v=*
 // @match        https://piped.private.coffee/watch?v=*
 // @match        https://piped.darkness.services/watch?v=*
-// @match        https://auth.minionflo.net/if/flow/login/?next=%2Fapplication%2Fo%2Fauthorize%2F%3Fclient_id%3DitqJeMzh8MceyJQ6xj9uVmYk2roNRA6SdKR1TFeZ%26redirect_uri%3Dhttps%253A%252F%252Fpiped.minionflo.net%252Foutpost.goauthentik.io%252Fcallback%253FX-authentik-auth-callback%253Dtrue%26response_type%3Dcode%26scope%3Dprofile%2Bopenid%26state%3DeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2F1dGhlbnRpay5pby9vdXRwb3N0L2l0cUplTXpoOE1jZXlKUTZ4ajl1Vm1ZazJyb05SQTZTZEtSMVRGZVoiLCJzaWQiOiJGS0tIRVNVRzVHT1ozNFY2QVRKSldHUkJGRDZNWldDSkVKTlQyTU9IQVpWNEU2SVM1QUlRIiwic3RhdGUiOiI5LTVmQ3VpR0NVV3JCSXJpdTNvdXlQdnEyaXpyVU1pZGhfNXJPWGxEVU9RIiwicmVkaXJlY3QiOiJodHRwczovL3BpcGVkLm1pbmlvbmZsby5uZXQvIn0.6HGjCCm_FBr9Bqm9ywv87NmieZ7zJWhLNvb4RP5e9NE/watch?v=*
 // @match        https://piped.privacydev.net/watch?v=*
+// @match        https://piped.ducks.party/watch?v=*
 // ==/UserScript==
 
 (async () => {
@@ -81,3 +78,4 @@
 ments();
 let scrollHandler;
                        scrollHandler = null;
+scrollHandler;
