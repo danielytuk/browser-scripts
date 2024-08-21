@@ -4,7 +4,7 @@
 // @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
 // @grant        none
 // @author       danielytuk
-// @version      1.168
+// @version      1.169
 // @run-at       document-idle
 // @downloadURL  https://cdn.jsdelivr.net/gh/danielytuk/browser-scripts/piped-video-enhancer/index.js
 // @match        https://piped.projectsegfau.lt/watch?v=*
@@ -14,6 +14,7 @@
 // @match        https://piped.yt/watch?v=*
 // @match        https://piped.astartes.nl/watch?v=*
 // @match        https://piped.drgns.space/watch?v=*
+// @match        https://piped.cdsp.cz/watch?v=*
 // @match        https://piped.phoenixthrush.com/watch?v=*
 // @match        https://piped.privacydev.net/watch?v=*
 // @match        https://piped.ducks.party/watch?v=*
