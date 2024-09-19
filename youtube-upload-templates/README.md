@@ -1,6 +1,6 @@
 # YouTube Description Templates
 
-Manage & apply description templates on the video edit page
+Manage & apply description templates on the video edit page with performance improvements
 
 ## Install
 
