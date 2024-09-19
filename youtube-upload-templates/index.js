@@ -1,16 +1,23 @@
 // ==UserScript==
 // @name         YouTube Description Templates
 // @namespace    http://tampermonkey.net/
-// @version      1.2
-// @description  Manage & apply description templates on the video edit page
+// @version      1.5
+// @description  Manage & apply description templates on the video edit page with performance improvements
 // @author       danielytuk
-// @match        https://studio.youtube.com/*/edit
+// @match        https://studio.youtube.com/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // ==/UserScript==
 
 (function() {
     'use strict';
+
+    let observer;
+
+    // Function to check if we're on the video edit page
+    function isOnVideoEditPage() {
+        return window.location.pathname.includes('/video/') && window.location.pathname.includes('/edit');
+    }
 
     // Load saved templates using GM_getValue
     function loadTemplates() {
@@ -25,28 +32,57 @@
 
     // Create and display the template management UI
     function createTemplateDropdown() {
-        const container = createElement('div', { id: 'template-container', styles: containerStyles });
-        const select = createElement('select', { id: 'template-selector', styles: selectStyles });
-        const applyButton = createElement('button', { innerText: 'Apply Template', styles: buttonStyles, onClick: applyTemplate });
-        const newTemplateButton = createElement('button', { innerText: 'Add New Template', styles: buttonStyles, onClick: showAddTemplateForm });
+        if (document.getElementById('template-container')) return; // Avoid duplicate UI creation
 
-        // Populate dropdown with existing templates
-        const templates = loadTemplates();
-        for (let templateName in templates) {
-            const option = createElement('option', { value: templateName, innerText: templateName });
-            select.appendChild(option);
-        }
+        const container = document.createElement('div');
+        container.id = 'template-container';
+        container.classList.add('template-container');
 
-        const label = createElement('label', { innerText: 'Select Template:', styles: labelStyles });
+        const select = document.createElement('select');
+        select.id = 'template-selector';
+        select.classList.add('template-selector');
 
-        container.appendChild(label);
-        container.appendChild(select);
-        container.appendChild(applyButton);
-        container.appendChild(newTemplateButton);
+        const applyButton = document.createElement('button');
+        applyButton.innerText = 'Apply Template';
+        applyButton.classList.add('btn', 'apply-btn');
+
+        const newTemplateButton = document.createElement('button');
+        newTemplateButton.innerText = 'Add New Template';
+        newTemplateButton.classList.add('btn', 'new-template-btn');
+
+        const label = document.createElement('label');
+        label.innerText = 'Select Template:';
+        label.classList.add('template-label');
+
+        const fragment = document.createDocumentFragment();
+        fragment.appendChild(label);
+        fragment.appendChild(select);
+        fragment.appendChild(applyButton);
+        fragment.appendChild(newTemplateButton);
+        container.appendChild(fragment);
 
         // Insert UI into the YouTube Studio page
         const parentElement = document.querySelector('#video-metadata-editor > ytcp-video-metadata-editor-sidepanel');
         if (parentElement) parentElement.insertBefore(container, parentElement.firstChild);
+
+        populateTemplates(select);
+
+        // Event delegation for buttons
+        container.addEventListener('click', function(event) {
+            if (event.target === applyButton) applyTemplate();
+            else if (event.target === newTemplateButton) showAddTemplateForm();
+        });
+    }
+
+    // Populate dropdown with existing templates
+    function populateTemplates(select) {
+        const templates = loadTemplates();
+        for (let templateName in templates) {
+            const option = document.createElement('option');
+            option.value = templateName;
+            option.innerText = templateName;
+            select.appendChild(option);
+        }
     }
 
     // Apply the selected template to the description box
@@ -66,24 +102,45 @@
 
     // Show the form to add a new template
     function showAddTemplateForm() {
+        if (document.getElementById('form-container')) return; // Avoid duplicate form creation
         document.getElementById('template-container').style.display = 'none';
 
-        const formContainer = createElement('div', { id: 'form-container', styles: containerStyles });
-        const form = createElement('form');
+        const formContainer = document.createElement('div');
+        formContainer.id = 'form-container';
+        formContainer.classList.add('template-container');
+
+        const form = document.createElement('form');
         form.appendChild(createFormInput('Template Name:', 'new-template-name', 'text'));
         form.appendChild(createFormTextarea('Description:', 'new-template-description'));
-        form.appendChild(createElement('button', { type: 'button', innerText: 'Save Template', styles: buttonStyles, onClick: saveNewTemplate }));
-        form.appendChild(createElement('button', { type: 'button', innerText: 'Cancel', styles: cancelButtonStyles, onClick: hideAddTemplateForm }));
+
+        const saveButton = document.createElement('button');
+        saveButton.type = 'button';
+        saveButton.innerText = 'Save Template';
+        saveButton.classList.add('btn', 'save-btn');
+
+        const cancelButton = document.createElement('button');
+        cancelButton.type = 'button';
+        cancelButton.innerText = 'Cancel';
+        cancelButton.classList.add('btn', 'cancel-btn');
+
+        form.appendChild(saveButton);
+        form.appendChild(cancelButton);
 
         formContainer.appendChild(form);
 
         const parentElement = document.querySelector('#video-metadata-editor > ytcp-video-metadata-editor-sidepanel');
         if (parentElement) parentElement.insertBefore(formContainer, parentElement.firstChild);
+
+        formContainer.addEventListener('click', function(event) {
+            if (event.target === saveButton) saveNewTemplate();
+            else if (event.target === cancelButton) hideAddTemplateForm();
+        });
     }
 
     // Hide the form to add a new template
     function hideAddTemplateForm() {
-        document.getElementById('form-container').remove();
+        const formContainer = document.getElementById('form-container');
+        if (formContainer) formContainer.remove();
         document.getElementById('template-container').style.display = 'block';
     }
 
@@ -99,7 +156,9 @@
 
             // Update dropdown without reloading
             const select = document.getElementById('template-selector');
-            const newOption = createElement('option', { value: name, innerText: name });
+            const newOption = document.createElement('option');
+            newOption.value = name;
+            newOption.innerText = name;
             select.appendChild(newOption);
 
             hideAddTemplateForm();
@@ -109,103 +168,103 @@
         }
     }
 
-    // Helper function to create an element with optional styles and event handlers
-    function createElement(tag, { id, innerText, styles, onClick, value, type } = {}) {
-        const element = document.createElement(tag);
-        if (id) element.id = id;
-        if (innerText) element.innerText = innerText;
-        if (styles) Object.assign(element.style, styles);
-        if (onClick) element.addEventListener('click', onClick);
-        if (value) element.value = value;
-        if (type) element.type = type;
-        return element;
-    }
-
     // Helper function to create a labeled input
     function createFormInput(labelText, id, type) {
-        const label = createElement('label', { innerText: labelText, styles: labelStyles });
-        const input = createElement('input', { id, type, styles: inputStyles });
-        const container = createElement('div');
+        const container = document.createElement('div');
+        container.classList.add('form-group');
+
+        const label = document.createElement('label');
+        label.innerText = labelText;
+        label.classList.add('form-label');
+
+        const input = document.createElement('input');
+        input.id = id;
+        input.type = type;
+        input.classList.add('form-input');
+
         container.appendChild(label);
         container.appendChild(input);
+
         return container;
     }
 
     // Helper function to create a labeled textarea
     function createFormTextarea(labelText, id) {
-        const label = createElement('label', { innerText: labelText, styles: labelStyles });
-        const textarea = createElement('textarea', { id, styles: textareaStyles });
-        const container = createElement('div');
+        const container = document.createElement('div');
+        container.classList.add('form-group');
+
+        const label = document.createElement('label');
+        label.innerText = labelText;
+        label.classList.add('form-label');
+
+        const textarea = document.createElement('textarea');
+        textarea.id = id;
+        textarea.classList.add('form-textarea');
+
         container.appendChild(label);
         container.appendChild(textarea);
+
         return container;
     }
 
-    // Styles for various elements
-    const containerStyles = {
-        background: '#fff',
-        borderRadius: '4px',
-        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-        padding: '16px',
-        marginBottom: '16px',
-        fontFamily: 'Roboto, Arial, sans-serif'
+    // Observe DOM changes and URL changes to handle navigation in the SPA
+    const observeDOMChanges = () => {
+        if (observer) return;
+
+        observer = new MutationObserver(() => {
+            if (isOnVideoEditPage() && !document.getElementById('template-container')) createTemplateDropdown();
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
     };
 
-    const selectStyles = {
-        width: '100%',
-        padding: '8px',
-        marginBottom: '16px',
-        fontSize: '14px',
-        border: '1px solid #ccc',
-        borderRadius: '4px'
-    };
+    // Initialize and observe
+    observeDOMChanges();
+    window.addEventListener('popstate', observeDOMChanges);
 
-    const buttonStyles = {
-        display: 'inline-block',
-        padding: '8px 16px',
-        fontSize: '14px',
-        color: '#fff',
-        background: '#1a73e8',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-        marginRight: '10px'
-    };
-
-    const cancelButtonStyles = {
-        ...buttonStyles,
-        background: '#ea4335'
-    };
-
-    const labelStyles = {
-        display: 'block',
-        marginBottom: '8px',
-        fontSize: '14px',
-        color: '#333'
-    };
-
-    const inputStyles = {
-        width: '100%',
-        padding: '8px',
-        marginBottom: '16px',
-        fontSize: '14px',
-        border: '1px solid #ccc',
-        borderRadius: '4px'
-    };
-
-    const textareaStyles = {
-        width: '100%',
-        padding: '8px',
-        marginBottom: '16px',
-        fontSize: '14px',
-        border: '1px solid #ccc',
-        borderRadius: '4px'
-    };
-
-    // Observe DOM changes to create the template UI when the page loads
-    const observer = new MutationObserver(() => {
-        if (document.querySelector('#video-metadata-editor > ytcp-video-metadata-editor-sidepanel') && !document.getElementById('template-selector')) createTemplateDropdown();
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+    // Add some basic CSS for the new UI elements
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .template-container {
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            margin-bottom: 16px;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        .template-selector, .form-input, .form-textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            font-size: 14px;
+            color: #fff;
+            background: #1a73e8;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-right: 10px;
+        }
+        .cancel-btn {
+            background: #ea4335;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #333;
+        }
+    `;
+    document.head.appendChild(style);
 })();
