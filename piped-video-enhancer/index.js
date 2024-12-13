@@ -4,10 +4,9 @@
 // @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
 // @grant        none
 // @author       danielytuk
-// @version      1.218
+// @version      1.219
 // @run-at       document-idle
 // @downloadURL  https://cdn.jsdelivr.net/gh/danielytuk/browser-scripts/piped-video-enhancer/index.js
-// @match        https://piped.yt/watch?v=*
 // @match        https://piped.privacydev.net/watch?v=*
 // @match        https://piped.ducks.party/watch?v=*
 // ==/UserScript==
@@ -72,3 +71,4 @@ scrollHandler;
 ectBeforeUnload();
 rollHandler;
 );
+Handler;
