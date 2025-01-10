@@ -4,10 +4,11 @@
 // @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
 // @grant        none
 // @author       danielytuk
-// @version      1.230
+// @version      1.231
 // @run-at       document-idle
 // @downloadURL  https://cdn.jsdelivr.net/gh/danielytuk/browser-scripts/piped-video-enhancer/index.js
 // @match        https://piped.adminforge.de/watch?v=*
+// @match        https://piped.drgns.space/watch?v=*
 // @match        https://piped.privacydev.net/watch?v=*
 // @match        https://piped.ducks.party/watch?v=*
 // ==/UserScript==
