@@ -1,3 +1,14 @@
+// ==UserScript==
+// @name         UploadTemplates
+// @namespace    http://tampermonkey.net/
+// @version      1.9
+// @description  UploadTemplates let you save and switch between different templates - helping you quickly match each video's metadata to its content.
+// @author       danielytuk
+// @match        https://studio.youtube.com/*
+// @grant        GM_setValue
+// @grant        GM_getValue
+// ==/UserScript==
+
 (function() {
     'use strict';
 
