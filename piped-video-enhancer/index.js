@@ -4,10 +4,9 @@
 // @icon         https://cdn.statically.io/gh/TeamPiped/Piped/3a78b19a/public/favicon.ico
 // @grant        none
 // @author       danielytuk
-// @version      1.357
+// @version      1.358
 // @run-at       document-idle
 // @downloadURL  https://cdn.jsdelivr.net/gh/danielytuk/browser-scripts/piped-video-enhancer/index.js
-// @match        https://piped.ducks.party/watch?v=*
 // ==/UserScript==
 
 (async () => {
@@ -77,3 +76,4 @@ ollHandler;
 Loaded", () => {
  () => {
 dler;
+ checkForElements();
